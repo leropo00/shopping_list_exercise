@@ -9,3 +9,10 @@ Route::get('/', function (Request $request) {
     return response('Hello world', 200)
         ->header('Content-Type', 'text/json');
 });
+
+Route::middleware(['auth:sanctum'])
+    ->group(function () {
+        Route::get('/user', function (Request $request) {
+            return $request->user();
+        });
+});

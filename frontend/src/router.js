@@ -1,6 +1,8 @@
 import {createRouter, createWebHistory} from "vue-router";
-import DefaultLayout from "./components/DefaultLayout.vue";
 
+import useUserStore from "./store/user.js";
+
+import DefaultLayout from "./components/DefaultLayout.vue";
 import Home from "./pages/Home.vue";
 import Login from "./pages/Login.vue";
 import NotFound from "./pages/NotFound.vue";
@@ -18,6 +20,15 @@ const routes = [
             }
             //
         ],
+        beforeEnter: async (to, from, next) => {
+            try {
+              const userStore = useUserStore();
+              await userStore.fetchUser();
+              next();
+            } catch (error) {
+              next(false); // Cancel navigation if data fetching fails
+            }
+        },      
     },
     {
         path: '/login',
