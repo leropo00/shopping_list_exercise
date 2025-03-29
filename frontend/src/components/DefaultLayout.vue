@@ -6,6 +6,7 @@ import router from "../router.js";
 import useUserStore from "../store/user.js";
 import {computed} from "vue";
 import {URL_LOGOUT} from '../constants.js';
+import SvgImage from './../assets/cart-shopping-list.svg?component'
 
 const userStore = useUserStore()
 
@@ -21,13 +22,12 @@ function logout() {
 
 <template>
   <div class="min-h-full">
-    <Disclosure as="nav" class="bg-gray-800" v-slot="{ open }">
+    <Disclosure as="nav" class="bg-gray-400" v-slot="{ open }">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 items-center justify-between">
           <div class="flex items-center">
             <div class="shrink-0">
-              <img class="size-8" src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500"
-                   alt="Your Company"/>
+              <SvgImage  width="40" height="40"  />
             </div>
             <div class="hidden md:block">
               <div class="ml-10 flex items-baseline space-x-4">
