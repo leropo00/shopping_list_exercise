@@ -2,13 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\FileUploadController;
-
-Route::get('/', function (Request $request) {
-
-    return response('Hello world', 200)
-        ->header('Content-Type', 'text/json');
-});
+use App\Http\Controllers\PurchaseListController;
 
 Route::middleware(['auth:sanctum'])
     ->group(function () {
@@ -16,3 +10,15 @@ Route::middleware(['auth:sanctum'])
             return $request->user();
         });
 });
+
+Route::get('/purchase_items', [PurchaseListController::class, 'list']);
+
+Route::get('/purchase_items/{id}', [PurchaseListController::class, 'show']);
+
+Route::post('/purchase_items', [PurchaseListController::class, 'store']);
+
+Route::put('/purchase_items/{id}', [PurchaseListController::class, 'update']);
+
+Route::delete('/purchase_items', [PurchaseListController::class, 'empty']);
+
+Route::delete('/purchase_items/{id}', [PurchaseListController::class, 'destroy']);
