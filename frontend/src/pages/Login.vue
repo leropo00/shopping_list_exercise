@@ -1,6 +1,30 @@
 <script setup>
-import GuestLayout from '@/components/GuestLayout.vue';
+import {ref} from "vue";
+
+import axiosClient from "../axios.js";
 import router from "../router.js";
+import {URL_LOGIN, URL_CSRF_COOKIE} from '../constants.js';
+
+import GuestLayout from "../components/GuestLayout.vue";
+
+const data = ref({
+  email: '',
+  password: '',
+})
+const errorMessage = ref('')
+
+function submit() {
+  axiosClient.get(URL_CSRF_COOKIE).then(response => {
+    axiosClient.post(URL_LOGIN, data.value)
+        .then(response => {
+          router.push({name: 'Home'})
+        })
+        .catch(error => {
+          console.log(error.response)
+          errorMessage.value = error.response.data.message;
+        })
+  });
+}
 
 </script>
 
@@ -22,6 +46,7 @@ import router from "../router.js";
                     id="email"
                     autocomplete="email"
                     required=""
+                    v-model="data.email"
                     class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
            </div>
          </div>
@@ -36,6 +61,7 @@ import router from "../router.js";
                     id="password"
                     autocomplete="current-password"
                     required=""
+                    v-model="data.password"
                     class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
            </div>
          </div>

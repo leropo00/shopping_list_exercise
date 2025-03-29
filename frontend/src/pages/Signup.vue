@@ -3,7 +3,7 @@ import {ref} from "vue";
 
 import axiosClient from "../axios.js";
 import router from "../router.js";
-import {URL_REGISTER} from '../constants.js';
+import {URL_REGISTER, URL_CSRF_COOKIE} from '../constants.js';
 
 import GuestLayout from '@/components/GuestLayout.vue';
 
@@ -22,7 +22,7 @@ const errors = ref({
 
 
 function register() {
-  axiosClient.get('/sanctum/csrf-cookie').then(response => {
+  axiosClient.get(URL_CSRF_COOKIE).then(response => {
     axiosClient.post(URL_REGISTER, data.value)
         .then(response => {
           router.push({name: 'Home'})
