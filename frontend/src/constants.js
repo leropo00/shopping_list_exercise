@@ -1,0 +1,5 @@
+const HTTP_CODE_UNAUTHORIZED = 401;
+
+const URL_REGISTER = '/auth/register';
+
+export {HTTP_CODE_UNAUTHORIZED, URL_REGISTER}
