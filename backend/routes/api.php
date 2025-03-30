@@ -24,4 +24,6 @@ Route::delete('/purchase_items', [PurchaseListController::class, 'empty']);
 
 Route::delete('/purchase_items/{id}', [PurchaseListController::class, 'destroy']);
 
-Route::get('/purchase_list', [ImportExportDataController::class, 'downloadJson']);
+Route::get('/purchase_list', [ImportExportDataController::class, 'list']);
+
+Route::post('/purchase_list', [ImportExportDataController::class, 'store']);
