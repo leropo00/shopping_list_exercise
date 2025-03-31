@@ -17,7 +17,7 @@ import { onMounted } from 'vue'
 import DataImportExport from '@/components/DataImportExport.vue'
 import DataList from '@/components/DataList.vue'
 
-import usePurchaseListStore from '../store/purchaseList'
+import usePurchaseListStore from '@/store/purchaseList'
 
 const listStore = usePurchaseListStore()
 

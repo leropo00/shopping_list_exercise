@@ -12,6 +12,9 @@ const usePurchaseListStore = defineStore('purchaseList', {
         this.data = data
       })
     },
+    clearList() {
+      this.data = []
+    },
   },
 })
 

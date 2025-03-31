@@ -22,11 +22,40 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue'
 const props = defineProps(['list'])
+import usePurchaseListStore from '@/store/purchaseList'
+
+const listStore = usePurchaseListStore()
+
 function formatItem(item) {
   if (item.quantity == 1) {
     return item.item_name
   }
   return `{item.quantity} x {item.item_name}`
 }
+
+onMounted(() => {
+  const evtSource = new EventSource(import.meta.env.VITE_API_BASE_URL + '/api/notifications')
+
+  evtSource.onmessage = (e) => {
+    console.log('onmessage')
+
+    if (e.data == null || e.data.length == 0) {
+      return
+    }
+
+    try {
+      const dataParsed = JSON.parse(e.data)
+      console.log(dataParsed)
+      for (const element of dataParsed) {
+        if (element.event == 'delete_all') {
+          listStore.clearList()
+        }
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+})
 </script>

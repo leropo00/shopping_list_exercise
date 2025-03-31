@@ -36,24 +36,6 @@ function logout() {
             <div class="shrink-0">
               <SvgImage width="40" height="40" />
             </div>
-            <div class="hidden md:block">
-              <div class="ml-10 flex items-baseline space-x-4">
-                <RouterLink
-                  v-for="item in navigation"
-                  :key="item.name"
-                  :to="item.to"
-                  :class="[
-                    $route.name === item.to.name
-                      ? 'bg-gray-900 text-white'
-                      : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                    'rounded-md px-3 py-2 text-sm font-medium',
-                  ]"
-                  :aria-current="$route.name === item.to.name ? 'page' : undefined"
-                >
-                  {{ item.name }}
-                </RouterLink>
-              </div>
-            </div>
           </div>
           <div class="hidden md:block">
             <div class="ml-4 flex items-center md:ml-6">
@@ -109,21 +91,6 @@ function logout() {
       </div>
 
       <DisclosurePanel class="md:hidden">
-        <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
-          <RouterLink
-            v-for="item in navigation"
-            :key="item.name"
-            :to="item.to"
-            :class="[
-              $route.name === item.to.name
-                ? 'bg-gray-900 text-white'
-                : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-              'block rounded-md px-3 py-2 text-base font-medium',
-            ]"
-            :aria-current="$route.name === item.to.name ? 'page' : undefined"
-            >{{ item.name }}
-          </RouterLink>
-        </div>
         <div class="border-t border-gray-700 pb-3 pt-4">
           <div class="flex items-center px-5">
             <div class="shrink-0">
