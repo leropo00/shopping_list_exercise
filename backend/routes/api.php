@@ -11,21 +11,26 @@ Route::middleware(['auth:sanctum'])
         Route::get('/user', function (Request $request) {
             return $request->user();
         });
+
+        Route::prefix('/purchase_items')    ->group(function () {
+            Route::get('', [PurchaseListController::class, 'list']);
+
+            Route::post('', [PurchaseListController::class, 'store']);
+
+            Route::delete('', [PurchaseListController::class, 'empty']);
+    
+            Route::delete('/{id}', [PurchaseListController::class, 'destroy']);
+        });
+
+        Route::get('/purchase_list', [ImportExportDataController::class, 'list']);
 });
 
-Route::get('/purchase_items', [PurchaseListController::class, 'list']);
+
+
 
 Route::get('/purchase_items/{id}', [PurchaseListController::class, 'show']);
 
-Route::post('/purchase_items', [PurchaseListController::class, 'store']);
-
 Route::put('/purchase_items/{id}', [PurchaseListController::class, 'update']);
-
-Route::delete('/purchase_items', [PurchaseListController::class, 'empty']);
-
-Route::delete('/purchase_items/{id}', [PurchaseListController::class, 'destroy']);
-
-Route::get('/purchase_list', [ImportExportDataController::class, 'list']);
 
 Route::post('/purchase_list', [ImportExportDataController::class, 'store']);
 
