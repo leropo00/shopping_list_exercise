@@ -20,10 +20,8 @@ class PurchaseListController extends Controller
             'quantity' => ['required', 'numeric','min:1'],
         ]);
 
-        // TODO: find in not checked exists with the same name
         if (PurchaseItem::editable()->where('item_name', $request->item_name)->count() > 0) {
-            // TODO item alredy exists errpr
-            return response("ERROR", 400);
+            return response("ERROR_EXISTING_ITEM", 400);
         }
 
         $item = DB::transaction(function() use($request) {
@@ -52,9 +50,35 @@ class PurchaseListController extends Controller
             'quantity' => ['required', 'numeric','min:1'],
         ]);
 
-        // TODO: find if record by id exits, check for duplicate item
-        // check that record is editable
+        $existingItem = PurchaseItem::findOrFail($id);
+        if ($existingItem->status != PURCHASE_LIST_STATUS_EDITABLE) {
+            return response("ERROR_NON_EDITABLE_ITEM", 400);
+        }
+
+        if ($existingItem->item_name != $request->item_name && 
+             PurchaseItem::editable()
+                ->whereNot('id', $id)
+                ->where('item_name', $request->item_name)
+                ->count() > 0) {
+    
+            return response("EXISTING_ITEM_WITH_SAME_NAME", 400);
+        }
+
+        $item = DB::transaction(function() use($request, $existingItem) {
+            $userId = $request->user()->id;
+            $existingItem->item_name = $request->item_name;
+            $existingItem->quantity = $request->quantity;
+            $item = $existingItem->save();
+            PurchaseListEvent::create([
+                'event' => PURCHASE_LIST_EVENT_UPDATE,
+                'user_id' => $userId,
+                'record_id' => $existingItem->id,
+            ]);
+            return $item;
+        });		
+
         return response($item, 200);
+
     }
 
     /**

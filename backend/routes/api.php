@@ -17,6 +17,8 @@ Route::middleware(['auth:sanctum'])
 
             Route::post('', [PurchaseListController::class, 'store']);
 
+            Route::put('/{id}', [PurchaseListController::class, 'update']);
+
             Route::delete('', [PurchaseListController::class, 'empty']);
     
             Route::delete('/{id}', [PurchaseListController::class, 'destroy']);
@@ -25,12 +27,7 @@ Route::middleware(['auth:sanctum'])
         Route::get('/purchase_list', [ImportExportDataController::class, 'list']);
 });
 
-
-
-
 Route::get('/purchase_items/{id}', [PurchaseListController::class, 'show']);
-
-Route::put('/purchase_items/{id}', [PurchaseListController::class, 'update']);
 
 Route::post('/purchase_list', [ImportExportDataController::class, 'store']);
 
