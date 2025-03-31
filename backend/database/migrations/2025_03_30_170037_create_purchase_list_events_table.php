@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create(TABLE_PURCHASE_LIST_EVENTS, function (Blueprint $table) {
             $table->id();
             $table->text("event");
-            $table->text("user");
+            $table->integer("user_id");
+            $table->integer("record_id")->nullable();
             $table->timestamps();
         });
     }

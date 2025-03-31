@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\PurchaseItem;
+use App\Models\PurchaseListEvent;
 
 class PurchaseListController extends Controller
 {
@@ -24,10 +26,18 @@ class PurchaseListController extends Controller
             return response("ERROR", 400);
         }
 
-        $item = PurchaseItem::create([
-            'item_name' => $request->item_name,
-            'quantity' => $request->quantity,
-        ]);
+        $item = DB::transaction(function() use($request) {
+            $userId = $request->user()->id;
+            $item = PurchaseItem::create([
+                'item_name' => $request->item_name,
+                'quantity' => $request->quantity,
+            ]);
+                PurchaseListEvent::create([
+                'event' => PURCHASE_LIST_EVENT_ADD,
+                'user_id' => $userId,
+            ]);
+            return $item;
+        });		
 
         return response($item, 201);
     }
@@ -50,10 +60,19 @@ class PurchaseListController extends Controller
     /**
      * Delete an existing resource.
      */
-    public function destroy(Request $request, string $id)
+    public function destroy(Request $request, string $recordId)
     {
-        PurchaseItem::editable()->where('id', $id)->delete();
-        return response(204);
+        $userId = $request->user()->id;
+        DB::transaction(function() use($recordId, $userId) {
+            PurchaseItem::editable()->where('id', $recordId)->delete();
+            PurchaseListEvent::create([
+                'event' => PURCHASE_LIST_EVENT_DELETE,
+                'user_id' => $userId,
+                'record_id' => $recordId,
+            ]);
+        });
+
+        return response(null, 204);
     }
 
     /**
@@ -61,8 +80,15 @@ class PurchaseListController extends Controller
      */
     public function empty(Request $request)
     {
-        PurchaseItem::editable()->delete();
-        return response(204);
+        $userId = $request->user()->id;
+        DB::transaction(function() use($userId) {
+            PurchaseItem::editable()->delete();
+            PurchaseListEvent::create([
+                'event' => PURCHASE_LIST_EVENT_DELETE_ALL,
+                'user_id' => $userId,
+            ]);
+        });		
+        return response(null, 204);
     }
     
     /**

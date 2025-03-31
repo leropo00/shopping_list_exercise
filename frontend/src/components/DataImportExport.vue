@@ -8,19 +8,43 @@
       >
         Prenesi podatke
       </button>
+
+      <button
+        type="submit"
+        @click="deleteList()"
+        class="rounded-md bg-red-600 px-3 py-1 text-sm/6 font-semibold text-white shadow-sm hover:bg-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700"
+      >
+        Počisti seznam
+      </button>
     </div>
   </main>
 </template>
 
 <script setup>
 import axiosClient from '../axios.js'
-import { HTTP_CODE_SUCCESS, URL_EXPORT_JSON } from '../constants.js'
+import {
+  HTTP_CODE_SUCCESS,
+  HTTP_CODE_NO_CONTENT,
+  URL_EXPORT_JSON,
+  URL_DELETE_ALL_PURCHASE_ITEMS,
+} from '../constants.js'
 import fileDownload from 'js-file-download'
+import usePurchaseListStore from '@/store/purchaseList'
+
+const listStore = usePurchaseListStore()
 
 function downloadJsonData() {
   axiosClient.get(URL_EXPORT_JSON, { responseType: 'blob' }).then((response) => {
     if (response.status === HTTP_CODE_SUCCESS) {
       fileDownload(response.data, 'output.json')
+    }
+  })
+}
+
+function deleteList() {
+  axiosClient.delete(URL_DELETE_ALL_PURCHASE_ITEMS).then((response) => {
+    if (response.status === HTTP_CODE_NO_CONTENT) {
+      listStore.clearList()
     }
   })
 }

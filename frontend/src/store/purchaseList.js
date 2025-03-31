@@ -15,6 +15,9 @@ const usePurchaseListStore = defineStore('purchaseList', {
     clearList() {
       this.data = []
     },
+    removeItem(itemId) {
+      this.data = this.data.filter((item) => item.id !== itemId)
+    },
   },
 })
 
