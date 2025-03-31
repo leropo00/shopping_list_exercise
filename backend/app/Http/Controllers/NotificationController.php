@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\PurchaseListEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
+// workaround so that error Maximum execution time of 120 seconds exceeded does not happen
+// meaning SSE works after 2 minutes
+ini_set('max_execution_time', 0);
 
 class NotificationController extends Controller
 {
@@ -28,7 +33,8 @@ class NotificationController extends Controller
                     echo "data: " . json_encode($notifications) . "\n\n";
                 }
 
-                PurchaseListEvent::truncate();
+                // don't clear whole table, as it is possible new events might occur in between
+                DB::table(TABLE_PURCHASE_LIST_EVENTS)->whereIn('id', $notifications->pluck('id')->all())->delete();
 
                 // Flush the output buffer
                 ob_flush();
