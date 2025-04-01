@@ -33,14 +33,7 @@ class ImportShoppingList extends Command
           throw new \Exception("File contents are not json");
           return;
         }
-
         $jsonContents = json_decode($fileContents, true); 
-        $errors = $jsonDataService->checkErrorsInJsonData($jsonContents);
-        if (!empty($errors)) {
-            throw new \Exception("JSON validation errors: ".implode(', ', $errors));
-            return;
-        }
-
         $jsonDataService->parseJsonData($jsonContents);
         $jsonDataService->triggerEventChanged();
     }

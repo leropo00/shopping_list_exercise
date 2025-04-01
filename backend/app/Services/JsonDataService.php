@@ -54,16 +54,22 @@ class JsonDataService
     }
 
     public function parseJsonData(array $json): void
-    {
-        // get all the values
-
+    { 
         DB::transaction(function() use($json) {
-            $existingRecords = PurchaseItem::all()->mapWithKeys(function ($item, $key) {
-                return [$item['id'] => false];
-            });
 
+            /*
+                my initial idea was to delete all the records,
+                that are no longer present in the imported file
+                but since action to delete all the records is available to each user in interface
+                I have decided to leave records, so that you can append previous records to exisiting state
+             */
 
             foreach ($json as $item) {
+                /*
+                    id fields are ignored, because we may import previous state from some time ago,
+                    but the autoincrement field for id has increased in the meantime
+                    so records may be present with identical data, but different id
+                 */
 
                 PurchaseItem::where('id', $item['id']);
 

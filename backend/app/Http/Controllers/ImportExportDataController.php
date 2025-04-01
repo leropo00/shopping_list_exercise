@@ -42,19 +42,13 @@ class ImportExportDataController extends Controller
         $request->validate([
             'file' => ['required', 'file'],
         ]);
-
         $fileContents = $request->file('file')->get();
         // workaround as validation inside request->validate didn't work   mimetypes:application/json,text/plain
         if (!Str::isJson($fileContents)) {
             return response("File contents are not json", ResponseCode::HTTP_BAD_REQUEST);
         }
-
         $jsonContents = json_decode($fileContents, true); 
-        $errors = $this->jsonDataService->checkErrorsInJsonData($jsonContents);
-        if (!empty($errors)) {
-            return response($errors, ResponseCode::HTTP_BAD_REQUEST);
-        }
-        
+        $this->jsonDataService->checkErrorsInJsonData($jsonContents);
         $this->jsonDataService->parseJsonData($jsonContents);
         $this->$jsonDataService->triggerEventChanged();
         return response($fileContents, ResponseCode::CREATED);
