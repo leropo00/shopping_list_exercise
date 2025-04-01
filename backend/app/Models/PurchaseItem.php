@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\PurchaseItemStatus;
 
 class PurchaseItem extends Model
 {
@@ -26,6 +27,6 @@ class PurchaseItem extends Model
      */
     public function scopeEditable(Builder $query): void
     {
-        $query->where('status', PURCHASE_LIST_STATUS_EDITABLE);
+        $query->where('status', PurchaseItemStatus::UNCHECKED->value);
     }
 }

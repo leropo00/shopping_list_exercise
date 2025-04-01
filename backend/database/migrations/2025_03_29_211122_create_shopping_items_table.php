@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Validation\Rule;
+use App\Enums\PurchaseItemStatus;
 
 return new class extends Migration
 {
@@ -15,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('item_name');
             $table->integer('quantity');
-            $table->enum('status', [PURCHASE_LIST_STATUS_EDITABLE, PURCHASE_LIST_STATUS_IN_SHOPPING, PURCHASE_LIST_STATUS_CHECKED])->default(PURCHASE_LIST_STATUS_EDITABLE);
+            $table->enum('status',array_column(PurchaseItemStatus::cases(), 'value'))->default(PurchaseItemStatus::UNCHECKED->value);
             $table->string('shopping_owner')->nullable();
             $table->dateTime('checked_date')->nullable();
             $table->integer('checked_quantity')->nullable();

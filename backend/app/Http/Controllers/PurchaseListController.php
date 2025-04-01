@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Enums\PurchaseItemStatus;
 use App\Models\PurchaseItem;
 use App\Models\PurchaseListEvent;
 
@@ -16,7 +17,7 @@ class PurchaseListController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'item_name' => ['required', 'max:255'],
+            'item_name' => ['required', 'min:1', 'max:255'],
             'quantity' => ['required', 'numeric','min:1'],
         ]);
 
@@ -27,7 +28,7 @@ class PurchaseListController extends Controller
         $item = DB::transaction(function() use($request) {
             $userId = $request->user()->id;
             $item = PurchaseItem::create([
-                'item_name' => $request->item_name,
+                'item_name' => strip_tags($request->item_name),
                 'quantity' => $request->quantity,
             ]);
                 PurchaseListEvent::create([
@@ -46,12 +47,12 @@ class PurchaseListController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'item_name' => ['required', 'max:255'],
+            'item_name' => ['required', 'min:1', 'max:255'],
             'quantity' => ['required', 'numeric','min:1'],
         ]);
 
         $existingItem = PurchaseItem::findOrFail($id);
-        if ($existingItem->status != PURCHASE_LIST_STATUS_EDITABLE) {
+        if ($existingItem->status != PurchaseItemStatus::UNCHECKED->value) {
             return response("ERROR_NON_EDITABLE_ITEM", 400);
         }
 
@@ -66,7 +67,7 @@ class PurchaseListController extends Controller
 
         $item = DB::transaction(function() use($request, $existingItem) {
             $userId = $request->user()->id;
-            $existingItem->item_name = $request->item_name;
+            $existingItem->item_name = strip_tags($request->item_name);
             $existingItem->quantity = $request->quantity;
             $item = $existingItem->save();
             PurchaseListEvent::create([
