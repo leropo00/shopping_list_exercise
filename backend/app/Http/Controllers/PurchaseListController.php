@@ -40,7 +40,7 @@ class PurchaseListController extends Controller
             return $item;
         });		
 
-        return response($item, ResponseCode::CREATED);
+        return response($item, ResponseCode::HTTP_CREATED);
     }
 
     /**

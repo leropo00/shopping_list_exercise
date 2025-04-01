@@ -31,7 +31,7 @@ class SecurityTest extends TestCase
             'quantity' => 1,
         ]);
         $response
-            ->assertStatus(ResponseCode::HTTP_OK)
+            ->assertStatus(ResponseCode::HTTP_CREATED)
             ->assertJson(['item_name' => $SANITIZED_OUTPUT]);
 
         $bodyResponse = $response->decodeResponseJson();
