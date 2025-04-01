@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response as ResponseCode;
 use App\Enums\PurchaseItemStatus;
 use App\Models\PurchaseItem;
 use App\Models\PurchaseListEvent;
@@ -22,7 +24,7 @@ class PurchaseListController extends Controller
         ]);
 
         if (PurchaseItem::editable()->where('item_name', $request->item_name)->count() > 0) {
-            return response("ERROR_EXISTING_ITEM", 400);
+            return response("ERROR_EXISTING_ITEM", ResponseCode::HTTP_BAD_REQUEST );
         }
 
         $item = DB::transaction(function() use($request) {
@@ -38,7 +40,7 @@ class PurchaseListController extends Controller
             return $item;
         });		
 
-        return response($item, 201);
+        return response($item, ResponseCode::CREATED);
     }
 
     /**
@@ -53,7 +55,7 @@ class PurchaseListController extends Controller
 
         $existingItem = PurchaseItem::findOrFail($id);
         if ($existingItem->status != PurchaseItemStatus::UNCHECKED->value) {
-            return response("ERROR_NON_EDITABLE_ITEM", 400);
+            return response("ERROR_NON_EDITABLE_ITEM", ResponseCode::HTTP_BAD_REQUEST);
         }
 
         if ($existingItem->item_name != $request->item_name && 
@@ -62,7 +64,7 @@ class PurchaseListController extends Controller
                 ->where('item_name', $request->item_name)
                 ->count() > 0) {
     
-            return response("EXISTING_ITEM_WITH_SAME_NAME", 400);
+            return response("EXISTING_ITEM_WITH_SAME_NAME", ResponseCode::HTTP_BAD_REQUEST);
         }
 
         $item = DB::transaction(function() use($request, $existingItem) {
@@ -78,7 +80,7 @@ class PurchaseListController extends Controller
             return $item;
         });		
 
-        return response($item, 200);
+        return response($item, ResponseCode::HTTP_OK);
 
     }
 
@@ -97,7 +99,7 @@ class PurchaseListController extends Controller
             ]);
         });
 
-        return response(null, 204);
+        return response(null, ResponseCode::HTTP_NO_CONTENT);
     }
 
     /**
@@ -113,7 +115,7 @@ class PurchaseListController extends Controller
                 'user_id' => $userId,
             ]);
         });		
-        return response(null, 204);
+        return response(null, ResponseCode::HTTP_NO_CONTENT );
     }
     
     /**

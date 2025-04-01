@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Symfony\Component\HttpFoundation\Response as ResponseCode;
 use Tests\TestCase;
 use App\Models\PurchaseItem;
 use App\Models\User;
@@ -30,7 +31,7 @@ class SecurityTest extends TestCase
             'quantity' => 1,
         ]);
         $response
-            ->assertStatus(201)
+            ->assertStatus(ResponseCode::HTTP_OK)
             ->assertJson(['item_name' => $SANITIZED_OUTPUT]);
 
         $bodyResponse = $response->decodeResponseJson();
@@ -44,7 +45,8 @@ class SecurityTest extends TestCase
         $response =  $this->actingAs($user)->putJson('/api/purchase_items/' . $itemId, [
             'item_name' => "<body onload=alert('test1')>Text", 
             'quantity' => 1,
-        ]);
+        ])->assertStatus(ResponseCode::HTTP_OK);
+
         $this->assertDatabaseHas(TABLE_PURCHASE_LIST, [
             'id' =>  $itemId,
             'item_name' => 'Text',
