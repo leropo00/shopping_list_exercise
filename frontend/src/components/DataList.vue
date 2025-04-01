@@ -35,9 +35,11 @@
           </th>
         </tr>
         <UncheckedTableHead v-if="selectedType == ITEM_STATUS_UNCHECKED" />
+        <InShoppingTableHead v-if="selectedType == ITEM_STATUS_IN_SHOPPING" />
         <CheckedTableHead v-else-if="selectedType == ITEM_STATUS_CHECKED" />
       </thead>
       <UncheckedTableTbody v-if="selectedType == ITEM_STATUS_UNCHECKED" />
+      <InShoppingTableTbody v-if="selectedType == ITEM_STATUS_IN_SHOPPING" />
       <CheckedTableTbody v-else-if="selectedType == ITEM_STATUS_CHECKED" />
     </table>
   </div>
@@ -49,12 +51,6 @@ import useUserStore from '@/store/user.js'
 import usePurchaseListStore from '@/store/purchaseList'
 import axiosClient from '@/axios.js'
 import {
-  URL_CREATE_PURCHASE_ITEM,
-  URL_UPDATE_PURCHASE_ITEM,
-  URL_DELETE_PURCHASE_ITEM,
-  HTTP_CODE_SUCCESS,
-  HTTP_CODE_CREATED,
-  HTTP_CODE_NO_CONTENT,
   ITEM_STATUS_UNCHECKED,
   ITEM_STATUS_CHECKED,
   ITEM_STATUS_IN_SHOPPING,
@@ -62,6 +58,9 @@ import {
 
 import UncheckedTableHead from '@/components/table/UncheckedTableHead.vue'
 import UncheckedTableTbody from '@/components/table/UncheckedTableTbody.vue'
+
+import InShoppingTableHead from '@/components/table/InShoppingTableHead.vue'
+import InShoppingTableTbody from '@/components/table/InShoppingTableTbody.vue'
 
 import CheckedTableHead from '@/components/table/CheckedTableHead.vue'
 import CheckedTableTbody from '@/components/table/CheckedTableTbody.vue'
