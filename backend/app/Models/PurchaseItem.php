@@ -29,4 +29,20 @@ class PurchaseItem extends Model
     {
         $query->where('status', PurchaseItemStatus::UNCHECKED->value);
     }
+
+   /**
+     * Scope a query to only include items that are currenlty in shopping.
+     */
+    public function scopeInShopping(Builder $query): void
+    {
+        $query->where('status', PurchaseItemStatus::IN_SHOPPING->value);
+    }
+
+   /**
+     * Scope a query to only include items on the list.
+     */
+    public function scopeChecked(Builder $query): void
+    {
+        $query->where('status', PurchaseItemStatus::CHECKED->value);
+    }
 }

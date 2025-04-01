@@ -42,5 +42,6 @@ class ImportShoppingList extends Command
         }
 
         $jsonDataService->parseJsonData($jsonContents);
+        $jsonDataService->triggerEventChanged();
     }
 }

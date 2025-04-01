@@ -55,6 +55,7 @@ class ImportExportDataController extends Controller
         }
         
         $this->jsonDataService->parseJsonData($jsonContents);
-        return response(201);
+        $this->$jsonDataService->triggerEventChanged();
+        return response($fileContents, 201);
     }
 }
