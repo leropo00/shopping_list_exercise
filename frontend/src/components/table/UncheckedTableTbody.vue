@@ -1,0 +1,120 @@
+<template>
+  <tbody class="bg-white">
+    <tr v-for="item in itemsList" :key="item.id">
+      <template v-if="item.id == itemUpdatedData.item_id">
+        <td class="py-4 px-6 border-b border-gray-200">
+          <input
+            type="text"
+            class="border-black outline"
+            id="updated_item_name"
+            placeholder="Item name"
+            v-model="itemUpdatedData.item_name"
+            @keyup.enter="updateItemData(item.id)"
+          />
+        </td>
+        <td class="py-4 px-6 border-b border-gray-200">
+          <input
+            type="number"
+            min="1"
+            class="border-black outline w-24"
+            id="updated_item_quantity"
+            v-model="itemUpdatedData.quantity"
+            @keyup.enter="updateItemData(item.id)"
+          />
+        </td>
+        <td class="py-4 px-6 border-b border-gray-200">
+          <button
+            type="button"
+            class="border-black outline mr-4 p-2"
+            @click="updateItemData(item.id)"
+          >
+            Update Item
+          </button>
+          <button type="button" class="border-black outline p-2" @click="cancelUpdate()">
+            Cancel update
+          </button>
+        </td>
+      </template>
+
+      <template v-else>
+        <td class="py-4 px-6 border-b border-gray-200">
+          {{ item.item_name }}
+        </td>
+        <td class="py-4 px-6 border-b border-gray-200">{{ item.quantity }}</td>
+        <td class="py-4 px-6 border-b border-gray-200">
+          <button
+            type="button"
+            class="border-black outline mr-4 p-2"
+            @click="prepareItemForEdit(item)"
+          >
+            Edit item
+          </button>
+          <button type="button" class="border-black outline p-2" @click="deleteItem(item.id)">
+            Delete item
+          </button>
+        </td>
+      </template>
+    </tr>
+  </tbody>
+</template>
+
+<script setup>
+import { computed, ref } from 'vue'
+import usePurchaseListStore from '@/store/purchaseList'
+import axiosClient from '@/axios.js'
+import {
+  URL_UPDATE_PURCHASE_ITEM,
+  URL_DELETE_PURCHASE_ITEM,
+  HTTP_CODE_SUCCESS,
+  HTTP_CODE_NO_CONTENT,
+  ITEM_STATUS_UNCHECKED,
+} from '@/constants.js'
+
+const listStore = usePurchaseListStore()
+const itemsList = computed(() =>
+  listStore.data.filter((item) => item.status == ITEM_STATUS_UNCHECKED),
+)
+
+const itemUpdatedData = ref({
+  item_id: null,
+  item_name: '',
+  quantity: 1,
+})
+
+function prepareItemForEdit(item) {
+  itemUpdatedData.value.item_id = item.id
+  itemUpdatedData.value.item_name = item.item_name
+  itemUpdatedData.value.quantity = item.quantity
+}
+
+function updateItemData() {
+  axiosClient
+    .put(URL_UPDATE_PURCHASE_ITEM + itemUpdatedData.value.item_id, itemUpdatedData.value)
+    .then(async (response) => {
+      if (response.status === HTTP_CODE_SUCCESS) {
+        cancelUpdate()
+        await listStore.fetchList()
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+      // errors.value = error.response.data.errors
+    })
+}
+
+function cancelUpdate() {
+  itemUpdatedData.value.item_id = null
+  itemUpdatedData.value.item_name = ''
+  itemUpdatedData.value.quantity = 1
+}
+
+function deleteItem(itemId) {
+  axiosClient.delete(URL_DELETE_PURCHASE_ITEM + itemId).then((response) => {
+    if (response.status === HTTP_CODE_NO_CONTENT) {
+      listStore.removeItem(itemId)
+    }
+  })
+}
+</script>
+
+<style scoped></style>

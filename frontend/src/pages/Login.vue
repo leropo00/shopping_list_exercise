@@ -3,9 +3,9 @@ import { ref } from 'vue'
 
 import axiosClient from '../axios.js'
 import router from '../router.js'
-import { URL_LOGIN, URL_CSRF_COOKIE } from '../constants.js'
+import { URL_LOGIN, URL_CSRF_COOKIE } from '@/constants.js'
 
-import GuestLayout from '../components/layout/GuestLayout.vue'
+import GuestLayout from '@/components/layout/GuestLayout.vue'
 
 const data = ref({
   email: '',

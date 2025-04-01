@@ -7,7 +7,7 @@
   <main>
     <DataImportExport />
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-      <DataList :list="listStore.data" />
+      <DataList />
     </div>
   </main>
 </template>
@@ -16,7 +16,6 @@
 import { onMounted } from 'vue'
 import DataImportExport from '@/components/DataImportExport.vue'
 import DataList from '@/components/DataList.vue'
-
 import usePurchaseListStore from '@/store/purchaseList'
 
 const listStore = usePurchaseListStore()
