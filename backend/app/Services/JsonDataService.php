@@ -25,10 +25,10 @@ class JsonDataService
             '*.item_name' => ['required', 'string', 'min:1' ,'max:255'],
             '*.quantity' => ['required', 'numeric', 'min:1'],
             '*.status' => [Rule::enum(PurchaseItemStatus::class)],
-            '*.shopping_owner' => ['required_if:*.status,'.PurchaseItemStatus::IN_SHOPPING->value],
-            '*.checked_by_user_id'  => ['required_if:*.status,'.PurchaseItemStatus::CHECKED->value], 
-            '*.checked_date'  => ['required_if:*.status,'.PurchaseItemStatus::CHECKED->value], 
-            '*.checked_quantity'  => ['required_with:checked_date', 'lte:*.quantity', ], 
+            '*.shopping_owner' => ['required_if:*.status,'.PurchaseItemStatus::IN_SHOPPING->value, 'numeric'],
+            '*.checked_by_user_id'  => ['required_if:*.status,'.PurchaseItemStatus::CHECKED->value, 'numeric'], 
+            '*.checked_date'  => ['required_if:*.status,'.PurchaseItemStatus::CHECKED->value, 'date'], 
+            '*.checked_quantity'  => ['required_with:checked_date', 'lte:*.quantity', 'numeric'], 
         ]);
         $validator->validate();
 
@@ -71,65 +71,17 @@ class JsonDataService
                     so records may be present with identical data, but different id
                  */
 
-                $result = PurchaseItem::where('item_name', $item['item_name'])->where('status', $item['status'])->first();
-
-                /*
-                    add search on 
-                        $newItem->checked_by_user_id = $item['checked_by_user_id'];
-                        $newItem->checked_date = $item['checked_date'];
-                */
+                $result = PurchaseItem::where('item_name', $item['item_name'])->where('status', $item['status'])->
+                when($item['status'] == PurchaseItemStatus::CHECKED->value, function ($q) use ($item) {
+                    return $q->where('checked_date', $item['checked_date'])->where('checked_by_user_id', $item['checked_by_user_id']);
+                })->first();
 
                 if ($result) {
-                    $saveChanges = false;
-
-                    if ($result->quantity != $item['quantity'])  {
-                        $result->quantity =  $item['quantity'];
-                        $saveChanges = true;
-                    }
-
-                    if ($item['status'] == PurchaseItemStatus::IN_SHOPPING->value) {
-                        if ($result->checked_quantity != $item['checked_quantity'])  {
-                            $newItem->checked_quantity = $item['checked_quantity'];
-                            $saveChanges = true;
-                        } 
-                        if ($result->shopping_owner != $item['shopping_owner'])  {
-                            $newItem->shopping_owner = $item['shopping_owner'];
-                            $saveChanges = true;
-                        } 
-                    } 
-                    else if ($item['status'] == PurchaseItemStatus::CHECKED->value) {
-                        if ($result->checked_quantity != $item['checked_quantity'])  {
-                            $newItem->checked_quantity = $item['checked_quantity'];
-                            $saveChanges = true;
-                        } 
-                    } 
-
-
-                    if ($saveChanges) {
-                        $result->save();
-                    }
-                    continue;
+                    $this->updateExistingItem($result, $item);
                 }
-
-                
-                $newItem = new PurchaseItem;
-                $newItem->item_name = $item['item_name'];
-                $newItem->quantity = $item['quantity'];
-                $newItem->status = $item['status'];
-
-                // certain fields are not copied, even if data is present, based on the status
-                // as item should not have these fields based on state
-                if ($newItem->status== PurchaseItemStatus::IN_SHOPPING->value) {
-                    $newItem->shopping_owner = $item['shopping_owner'];
-                    $newItem->checked_quantity = $item['checked_quantity'];
+                else {
+                    $this->createNewPurchaseItem($item);
                 }
-                else if ($newItem->status == PurchaseItemStatus::CHECKED->value) {
-                    $newItem->checked_by_user_id = $item['checked_by_user_id'];
-                    $newItem->checked_date = $item['checked_date'];
-                    $newItem->checked_quantity = $item['checked_quantity'];
-                }
-                $newItem->save();
-
             }
 
         });		
@@ -141,5 +93,57 @@ class JsonDataService
         PurchaseListEvent::create([
             'event' => PURCHASE_LIST_EVENT_IMPORT,
         ]);
+    }
+
+    private function createNewPurchaseItem($item): void
+    {
+        $newItem = new PurchaseItem;
+        $newItem->item_name = $item['item_name'];
+        $newItem->quantity = $item['quantity'];
+        $newItem->status = $item['status'];
+
+        // certain fields are not copied, even if data is present, based on the status
+        // as item should not have these fields based on state
+        if ($newItem->status== PurchaseItemStatus::IN_SHOPPING->value) {
+            $newItem->shopping_owner = $item['shopping_owner'];
+            $newItem->checked_quantity = $item['checked_quantity'];
+        }
+        else if ($newItem->status == PurchaseItemStatus::CHECKED->value) {
+            $newItem->checked_by_user_id = $item['checked_by_user_id'];
+            $newItem->checked_date = $item['checked_date'];
+            $newItem->checked_quantity = $item['checked_quantity'];
+        }
+        $newItem->save();
+    }
+
+    private function updateExistingItem($result, array $item): void
+    {
+        $saveChanges = false;
+
+        if ($result->quantity != $item['quantity'])  {
+            $result->quantity =  $item['quantity'];
+            $saveChanges = true;
+        }
+
+        if ($item['status'] == PurchaseItemStatus::IN_SHOPPING->value) {
+            if ($result->checked_quantity != $item['checked_quantity'])  {
+                $result->checked_quantity = $item['checked_quantity'];
+                $saveChanges = true;
+            } 
+            if ($result->shopping_owner != $item['shopping_owner'])  {
+                $result->shopping_owner = $item['shopping_owner'];
+                $saveChanges = true;
+            } 
+        } 
+        else if ($item['status'] == PurchaseItemStatus::CHECKED->value) {
+            if ($result->checked_quantity != $item['checked_quantity'])  {
+                $result->checked_quantity = $item['checked_quantity'];
+                $saveChanges = true;
+            } 
+        } 
+
+        if ($saveChanges) {
+            $result->save();
+        }
     }
 }
