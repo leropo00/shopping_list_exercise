@@ -8,7 +8,7 @@
               type="button"
               class="border-black outline p-2"
               :class="{ 'bg-sky-300': selectedType == ITEM_STATUS_UNCHECKED }"
-              @click="showUnchecked()"
+              @click="changeItemStatus(ITEM_STATUS_UNCHECKED)"
             >
               Purchase List
             </button>
@@ -18,7 +18,7 @@
               type="button"
               class="border-black outline p-2"
               :class="{ 'bg-sky-300': selectedType == ITEM_STATUS_IN_SHOPPING }"
-              @click="showInShopping()"
+              @click="changeItemStatus(ITEM_STATUS_IN_SHOPPING)"
             >
               In shopping
             </button>
@@ -27,7 +27,7 @@
             <button
               type="button"
               class="border-black outline p-2"
-              @click="showChecked()"
+              @click="changeItemStatus(ITEM_STATUS_CHECKED)"
               :class="{ 'bg-sky-300': selectedType == ITEM_STATUS_CHECKED }"
             >
               History
@@ -46,10 +46,10 @@
 </template>
 
 <script setup>
-import { onMounted, computed, ref } from 'vue'
+import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
+import ReconnectingEventSource from 'reconnecting-eventsource'
 import useUserStore from '@/store/user.js'
 import usePurchaseListStore from '@/store/purchaseList'
-import axiosClient from '@/axios.js'
 import {
   ITEM_STATUS_UNCHECKED,
   ITEM_STATUS_CHECKED,
@@ -58,10 +58,8 @@ import {
 
 import UncheckedTableHead from '@/components/table/UncheckedTableHead.vue'
 import UncheckedTableTbody from '@/components/table/UncheckedTableTbody.vue'
-
 import InShoppingTableHead from '@/components/table/InShoppingTableHead.vue'
 import InShoppingTableTbody from '@/components/table/InShoppingTableTbody.vue'
-
 import CheckedTableHead from '@/components/table/CheckedTableHead.vue'
 import CheckedTableTbody from '@/components/table/CheckedTableTbody.vue'
 
@@ -72,8 +70,22 @@ const listStore = usePurchaseListStore()
 const userStore = useUserStore()
 const user = computed(() => userStore.user)
 
+const shoppingUserId = computed(() => {
+  const data = listStore.data
+    .filter((item) => item.status == ITEM_STATUS_IN_SHOPPING)
+    .map((item) => item.shopping_owner)
+
+  return data.length > 0 ? data[0] : null
+})
+
+let evtSource
+
 onMounted(() => {
-  const evtSource = new EventSource(import.meta.env.VITE_API_BASE_URL + '/api/notifications')
+  console.log('mounted')
+  evtSource = new ReconnectingEventSource(
+    import.meta.env.VITE_API_BASE_URL + '/api/notifications',
+    { withCredentials: true },
+  )
 
   evtSource.onmessage = async (e) => {
     console.log('onmessage')
@@ -103,17 +115,21 @@ onMounted(() => {
       console.log(err)
     }
   }
+
+  evtSource.onerror = async (e) => {
+    console.log('error occured, refresh state, in case any events were lost')
+    await listStore.fetchList()
+  }
+})
+onBeforeUnmount(() => {
+  try {
+    evtSource.close()
+  } catch (err) {
+    console.log(err)
+  }
 })
 
-function showUnchecked() {
-  selectedType.value = ITEM_STATUS_UNCHECKED
-}
-
-function showInShopping() {
-  selectedType.value = ITEM_STATUS_IN_SHOPPING
-}
-
-function showChecked() {
-  selectedType.value = ITEM_STATUS_CHECKED
+function changeItemStatus(status) {
+  selectedType.value = status
 }
 </script>

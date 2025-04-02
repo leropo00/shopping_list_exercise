@@ -24,6 +24,7 @@ class NotificationController extends Controller
 
         return response()->stream(function () {
             while (true) {
+
                 // Fetch the unread notifications for the authenticated user
                 $notifications = PurchaseListEvent::all();
 
@@ -32,13 +33,14 @@ class NotificationController extends Controller
                     // Format notifications as JSON and send them via SSE
                     echo "data: " . json_encode($notifications) . "\n\n";
                 }
-
-                // don't clear whole table, as it is possible new events might occur in between
-                DB::table(TABLE_PURCHASE_LIST_EVENTS)->whereIn('id', $notifications->pluck('id')->all())->delete();
-
+                
                 // Flush the output buffer
                 ob_flush();
                 flush();
+
+                // clearing occurs before flushing the buffer if action would take time
+                // don't clear whole table, as it is possible new events might occur in between
+                DB::table(TABLE_PURCHASE_LIST_EVENTS)->whereIn('id', $notifications->pluck('id')->all())->delete();
 
                 // Sleep for a few seconds before checking again
                 sleep(5);
