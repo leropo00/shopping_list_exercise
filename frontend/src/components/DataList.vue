@@ -2,36 +2,36 @@
   <div class="shadow-lg rounded-lg overflow-hidden mx-4 md:mx-10">
     <table class="w-full table-fixed">
       <thead>
-        <tr class="bg-gray-300">
-          <th class="w-1/3 py-4 px-6 text-left text-black font-bold uppercase">
-            <button
-              type="button"
-              class="cursor-pointer rounded border-black outline p-2"
-              :class="{ 'bg-indigo-600 text-white': selectedType == ITEM_STATUS_UNCHECKED }"
-              @click="changeItemStatus(ITEM_STATUS_UNCHECKED)"
+        <tr class="bg-gray-300 md:bg-white">
+          <th colspan="3">
+            <div
+              class="flex flex-col md:flex-row justify-center items-center sm:gap-4 mx-auto max-w-7xl sm:px-4 sm:py-4 md:py-1 md:px-1"
             >
-              Purchase List
-            </button>
-          </th>
-          <th class="w-1/3 py-4 px-6 text-left text-black font-bold uppercase">
-            <button
-              type="button"
-              class="cursor-pointer rounded border-black outline p-2"
-              :class="{ 'bg-indigo-600 text-white': selectedType == ITEM_STATUS_IN_SHOPPING }"
-              @click="changeItemStatus(ITEM_STATUS_IN_SHOPPING)"
-            >
-              In shopping
-            </button>
-          </th>
-          <th class="w-1/3 py-4 px-6 text-left text-black font-bold uppercase">
-            <button
-              type="button"
-              class="cursor-pointer rounded border-black outline p-2"
-              @click="changeItemStatus(ITEM_STATUS_CHECKED)"
-              :class="{ 'bg-indigo-600 text-white': selectedType == ITEM_STATUS_CHECKED }"
-            >
-              History
-            </button>
+              <button
+                type="button"
+                class="cursor-pointer rounded md:rounded-t-full border-black md:outline p-2 basis-full grow"
+                :class="{ 'bg-indigo-600 text-white': selectedType == ITEM_STATUS_UNCHECKED }"
+                @click="changeItemStatus(ITEM_STATUS_UNCHECKED)"
+              >
+                Purchase List
+              </button>
+              <button
+                type="button"
+                class="cursor-pointer rounded md:rounded-t-full border-black md:outline p-2 basis-full grow"
+                :class="{ 'bg-indigo-600 text-white': selectedType == ITEM_STATUS_IN_SHOPPING }"
+                @click="changeItemStatus(ITEM_STATUS_IN_SHOPPING)"
+              >
+                In shopping
+              </button>
+              <button
+                type="button"
+                class="cursor-pointer rounded md:rounded-t-full border-black md:outline p-2 basis-full grow"
+                @click="changeItemStatus(ITEM_STATUS_CHECKED)"
+                :class="{ 'bg-indigo-600 text-white': selectedType == ITEM_STATUS_CHECKED }"
+              >
+                History
+              </button>
+            </div>
           </th>
         </tr>
         <UncheckedTableHead v-if="selectedType == ITEM_STATUS_UNCHECKED" />
