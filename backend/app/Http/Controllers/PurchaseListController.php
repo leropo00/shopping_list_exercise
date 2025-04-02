@@ -33,7 +33,7 @@ class PurchaseListController extends Controller
                 'item_name' => strip_tags($request->item_name),
                 'quantity' => $request->quantity,
             ]);
-                PurchaseListEvent::create([
+            PurchaseListEvent::create([
                 'event' => PURCHASE_LIST_EVENT_ADD,
                 'user_id' => $userId,
             ]);

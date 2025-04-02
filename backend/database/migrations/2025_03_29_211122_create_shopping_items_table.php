@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('item_name');
             $table->integer('quantity');
             $table->enum('status',array_column(PurchaseItemStatus::cases(), 'value'))->default(PurchaseItemStatus::UNCHECKED->value);
-            $table->string('shopping_owner')->nullable();
+            $table->integer('shopping_owner')->nullable();
+            $table->integer('checked_by_user_id')->nullable();
             $table->dateTime('checked_date')->nullable();
             $table->integer('checked_quantity')->nullable();
             $table->timestamps();

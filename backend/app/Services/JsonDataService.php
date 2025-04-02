@@ -6,6 +6,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+
 use App\Enums\PurchaseItemStatus;
 use App\Models\PurchaseItem;
 use App\Models\PurchaseListEvent;
@@ -27,6 +28,7 @@ class JsonDataService
 
             '*.shopping_owner' => ['required_if:*.status,'.PurchaseItemStatus::IN_SHOPPING->value],
 
+            '*.checked_by_user_id'  => ['required_if:*.status,'.PurchaseItemStatus::CHECKED->value], 
             '*.checked_date'  => ['required_if:*.status,'.PurchaseItemStatus::CHECKED->value], 
             '*.checked_quantity'  => ['required_with:checked_date', 'lte:quantity', 'min:1'], 
         ]);
@@ -71,22 +73,64 @@ class JsonDataService
                     so records may be present with identical data, but different id
                  */
 
-                PurchaseItem::where('id', $item['id']);
+                $result = PurchaseItem::where('item_name', $item['item_name'])->where('status', $item['status'])->first();
 
-                // if unchecked
-                // find if item with same_item name
-                // update quantity if different
+                /*
+                    add search on 
+                        $newItem->checked_by_user_id = $item['checked_by_user_id'];
+                        $newItem->checked_date = $item['checked_date'];
+                */
+
+                if ($result) {
+                    $saveChanges = false;
+
+                    if ($result->quantity != $item['quantity'])  {
+                        $result->quantity =  $item['quantity'];
+                        $saveChanges = true;
+                    }
+
+                    if ($item['status'] == PurchaseItemStatus::IN_SHOPPING->value) {
+                        if ($result->checked_quantity != $item['checked_quantity'])  {
+                            $newItem->checked_quantity = $item['checked_quantity'];
+                            $saveChanges = true;
+                        } 
+                        if ($result->shopping_owner != $item['shopping_owner'])  {
+                            $newItem->shopping_owner = $item['shopping_owner'];
+                            $saveChanges = true;
+                        } 
+                    } 
+                    else if ($item['status'] == PurchaseItemStatus::CHECKED->value) {
+                        if ($result->checked_quantity != $item['checked_quantity'])  {
+                            $newItem->checked_quantity = $item['checked_quantity'];
+                            $saveChanges = true;
+                        } 
+                    } 
 
 
-                // if in_shopping
-                // find if item with same_item 
-                // if found
+                    if ($saveChanges) {
+                        $result->save();
+                    }
+                    continue;
+                }
 
-                // not found create
+                
+                $newItem = new PurchaseItem;
+                $newItem->item_name = $item['item_name'];
+                $newItem->quantity = $item['quantity'];
+                $newItem->status = $item['status'];
 
-
-                // if checked
-                // same_name, shopping_owner and checked_data
+                // certain fields are not copied, even if data is present, based on the status
+                // as item should not have these fields based on state
+                if ($newItem->status== PurchaseItemStatus::IN_SHOPPING->value) {
+                    $newItem->shopping_owner = $item['shopping_owner'];
+                    $newItem->checked_quantity = $item['checked_quantity'];
+                }
+                else if ($newItem->status == PurchaseItemStatus::CHECKED->value) {
+                    $newItem->checked_by_user_id = $item['checked_by_user_id'];
+                    $newItem->checked_date = $item['checked_date'];
+                    $newItem->checked_quantity = $item['checked_quantity'];
+                }
+                $newItem->save();
 
             }
 
