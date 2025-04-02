@@ -5,6 +5,7 @@
         {{ formatItem(item) }}
       </td>
       <td class="py-4 px-6 border-b border-gray-200">{{ formatQuantity(item) }}</td>
+      <td class="py-4 px-6 border-b border-gray-200">{{ shoppingUserId }}</td>
     </tr>
   </tbody>
 </template>
@@ -18,6 +19,14 @@ const listStore = usePurchaseListStore()
 const itemsList = computed(() =>
   listStore.data.filter((item) => item.status == ITEM_STATUS_IN_SHOPPING),
 )
+
+const shoppingUserId = computed(() => {
+  const data = listStore.data
+    .filter((item) => item.status == ITEM_STATUS_IN_SHOPPING)
+    .map((item) => item.shopping_owner)
+
+  return data.length > 0 ? data[0] : null
+})
 
 function formatQuantity(item) {
   if (!item.checked_quantity) {

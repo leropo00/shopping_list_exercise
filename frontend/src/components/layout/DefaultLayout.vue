@@ -49,7 +49,7 @@ function logout() {
                     <span class="sr-only">Open user menu</span>
                     <img
                       class="size-8 rounded-full"
-                      src="https://randomuser.me/api/portraits/men/81.jpg"
+                      src="https://miro.medium.com/v2/resize:fill:128:128/1*dmbNkD5D-u45r44go_cf0g.png"
                       alt=""
                     />
                     <span class="text-white ml-3">{{ user.name }}</span>
@@ -96,7 +96,7 @@ function logout() {
             <div class="shrink-0">
               <img
                 class="size-10 rounded-full"
-                src="https://randomuser.me/api/portraits/men/81.jpg"
+                src="https://miro.medium.com/v2/resize:fill:128:128/1*dmbNkD5D-u45r44go_cf0g.png"
                 alt=""
               />
             </div>
