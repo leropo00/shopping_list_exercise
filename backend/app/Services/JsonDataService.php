@@ -25,10 +25,10 @@ class JsonDataService
             '*.item_name' => ['required', 'string', 'min:1' ,'max:255'],
             '*.quantity' => ['required', 'numeric', 'min:1'],
             '*.status' => [Rule::enum(PurchaseItemStatus::class)],
-            '*.shopping_owner' => ['required_if:*.status,'.PurchaseItemStatus::IN_SHOPPING->value, 'numeric'],
-            '*.checked_by_user_id'  => ['required_if:*.status,'.PurchaseItemStatus::CHECKED->value, 'numeric'], 
-            '*.checked_date'  => ['required_if:*.status,'.PurchaseItemStatus::CHECKED->value, 'date'], 
-            '*.checked_quantity'  => ['required_with:checked_date', 'lte:*.quantity', 'numeric'], 
+            '*.shopping_owner' => ['required_if:*.status,'.PurchaseItemStatus::IN_SHOPPING->value, 'nullable'],
+            '*.checked_by_user_id'  => ['required_if:*.status,'.PurchaseItemStatus::CHECKED->value, 'nullable'], 
+            '*.checked_date'  => ['required_if:*.status,'.PurchaseItemStatus::CHECKED->value, 'nullable'], 
+            '*.checked_quantity'  => ['required_with:checked_date', 'lte:*.quantity', 'nullable'], 
         ]);
         $validator->validate();
 

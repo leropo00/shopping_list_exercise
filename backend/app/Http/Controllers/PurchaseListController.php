@@ -109,7 +109,9 @@ class PurchaseListController extends Controller
     {
         $userId = $request->user()->id;
         DB::transaction(function() use($userId) {
-            PurchaseItem::editable()->delete();
+            // PurchaseItem::editable()->delete();
+            DB::table(TABLE_PURCHASE_LIST)->delete();
+
             PurchaseListEvent::create([
                 'event' => PURCHASE_LIST_EVENT_DELETE_ALL,
                 'user_id' => $userId,

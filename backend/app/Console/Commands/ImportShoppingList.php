@@ -34,6 +34,7 @@ class ImportShoppingList extends Command
           return;
         }
         $jsonContents = json_decode($fileContents, true); 
+        $jsonDataService->checkErrorsInJsonData($jsonContents);
         $jsonDataService->parseJsonData($jsonContents);
         $jsonDataService->triggerEventChanged();
     }
