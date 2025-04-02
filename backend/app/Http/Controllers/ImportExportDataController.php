@@ -50,7 +50,7 @@ class ImportExportDataController extends Controller
         $jsonContents = json_decode($fileContents, true); 
         $this->jsonDataService->checkErrorsInJsonData($jsonContents);
         $this->jsonDataService->parseJsonData($jsonContents);
-        $this->$jsonDataService->triggerEventChanged();
-        return response($fileContents, ResponseCode::CREATED);
+        $this->jsonDataService->triggerEventChanged();
+        return response($fileContents, ResponseCode::HTTP_CREATED);
     }
 }

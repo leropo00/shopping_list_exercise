@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('shopping_owner')->nullable();
             $table->integer('checked_by_user_id')->nullable();
             $table->dateTime('checked_date')->nullable();
-            $table->integer('checked_quantity')->nullable();
+            $table->integer('checked_quantity')->default(0);
             $table->timestamps();
         });
     }

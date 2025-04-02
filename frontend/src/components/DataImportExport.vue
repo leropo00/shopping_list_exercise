@@ -1,12 +1,16 @@
 <template>
   <main>
-    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+    <div
+      class="flex flex-col md:flex-row justify-center items-center gap-2 mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8"
+    >
+      <FileUpload />
+
       <button
         type="submit"
         @click="downloadJsonData()"
-        class="rounded-md bg-red-600 px-3 py-1 text-sm/6 font-semibold text-white shadow-sm hover:bg-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700"
+        class="rounded-md mr-4 bg-red-600 px-3 py-1 text-sm/6 font-semibold text-white shadow-sm hover:bg-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700"
       >
-        Prenesi podatke
+        Export data
       </button>
 
       <button
@@ -14,14 +18,14 @@
         @click="deleteList()"
         class="rounded-md bg-red-600 px-3 py-1 text-sm/6 font-semibold text-white shadow-sm hover:bg-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700"
       >
-        Počisti seznam
+        Clear List
       </button>
     </div>
   </main>
 </template>
 
 <script setup>
-import axiosClient from '../axios.js'
+import axiosClient from '@/axios.js'
 import {
   HTTP_CODE_SUCCESS,
   HTTP_CODE_NO_CONTENT,
@@ -30,7 +34,7 @@ import {
 } from '../constants.js'
 import fileDownload from 'js-file-download'
 import usePurchaseListStore from '@/store/purchaseList'
-
+import FileUpload from '../components/FileUpload.vue'
 const listStore = usePurchaseListStore()
 
 function downloadJsonData() {
