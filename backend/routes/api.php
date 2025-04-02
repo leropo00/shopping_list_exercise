@@ -21,10 +21,13 @@ Route::middleware(['auth:sanctum', 'XssSanitizer'])
             Route::delete('/{id}', [PurchaseListController::class, 'destroy']);
         });
 
-        Route::get('/purchase_list', [ImportExportDataController::class, 'list']);
+        Route::prefix('/purchase_list')    ->group(function () {
+            Route::get('', [ImportExportDataController::class, 'list']);
+            Route::post('', [ImportExportDataController::class, 'store']);
+        });
+
+        Route::get('/notifications', [NotificationController::class, 'get']);
 });
 
 
-Route::post('/purchase_list', [ImportExportDataController::class, 'store']);
 
-Route::get('/notifications', [NotificationController::class, 'get']);
