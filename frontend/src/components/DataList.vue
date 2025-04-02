@@ -20,6 +20,7 @@
                 class="cursor-pointer rounded md:rounded-t-full border-black md:outline p-2 basis-full grow"
                 :class="{ 'bg-indigo-600 text-white': selectedType == ITEM_STATUS_IN_SHOPPING }"
                 @click="changeItemStatus(ITEM_STATUS_IN_SHOPPING)"
+                v-if="inShoppingCounts > 0"
               >
                 In shopping
               </button>
@@ -28,6 +29,7 @@
                 class="cursor-pointer rounded md:rounded-t-full border-black md:outline p-2 basis-full grow"
                 @click="changeItemStatus(ITEM_STATUS_CHECKED)"
                 :class="{ 'bg-indigo-600 text-white': selectedType == ITEM_STATUS_CHECKED }"
+                v-if="checkedCount > 0"
               >
                 History
               </button>
@@ -66,6 +68,13 @@ import CheckedTableTbody from '@/components/table/CheckedTableTbody.vue'
 const selectedType = ref(ITEM_STATUS_UNCHECKED)
 
 const listStore = usePurchaseListStore()
+
+const checkedCount = computed(
+  () => listStore.data.filter((item) => item.status == ITEM_STATUS_CHECKED).length,
+)
+const inShoppingCounts = computed(
+  () => listStore.data.filter((item) => item.status == ITEM_STATUS_IN_SHOPPING).length,
+)
 
 const userStore = useUserStore()
 const user = computed(() => userStore.user)

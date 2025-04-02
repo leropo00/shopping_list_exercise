@@ -20,7 +20,7 @@ class PurchaseItem extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['item_name', 'quantity'];
+    protected $fillable = ['item_name', 'quantity', 'status', 'shopping_owner', 'checked_by_user_id', 'checked_date', 'checked_quantity'];
 
     /**
      * Scope a query to only include items on the list.

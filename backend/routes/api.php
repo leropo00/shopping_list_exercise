@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ImportExportDataController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PurchaseListController;
+use App\Http\Controllers\ShoppingController;
 
 Route::middleware(['auth:sanctum', 'XssSanitizer'])
     ->group(function () {
@@ -25,6 +26,12 @@ Route::middleware(['auth:sanctum', 'XssSanitizer'])
             Route::get('', [ImportExportDataController::class, 'list']);
             Route::post('', [ImportExportDataController::class, 'store']);
         });
+
+
+        Route::prefix('/shopping_list')    ->group(function () {
+            Route::post('', [ShoppingController::class, 'store']);
+        });
+
 
         Route::get('/notifications', [NotificationController::class, 'get']);
 });

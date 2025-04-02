@@ -61,7 +61,9 @@ function deleteList() {
   })
 }
 
-function refreshList() {}
+async function refreshList() {
+  await listStore.fetchList()
+}
 </script>
 
 <style scoped></style>
