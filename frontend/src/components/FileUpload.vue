@@ -23,18 +23,20 @@ function submit(file) {
   <div class="basis-full grow md:basis-1/4 w-full py-1">
     <form @submit.prevent="submit">
       <div>
-        <div
-          class="cursor-pointer rounded-md bg-indigo-600 hover:bg-indigo-500 px-3 py-1.5 w-full text-sm font-semibold text-white text-center shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-          <input
-            id="file-upload"
-            name="file-upload"
-            type="file"
-            @input="submit($event.target.files[0])"
-            class="sr-only"
-          />
-          Import data file
-        </div>
+        <label for="file-upload">
+          <div
+            class="cursor-pointer rounded-md bg-indigo-600 hover:bg-indigo-500 px-3 py-1.5 w-full text-sm font-semibold text-white text-center shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            <input
+              id="file-upload"
+              name="file-upload"
+              type="file"
+              @input="submit($event.target.files[0])"
+              class="sr-only"
+            />
+            Import data file
+          </div>
+        </label>
       </div>
     </form>
   </div>
