@@ -12,8 +12,11 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useDateFormat, useNow } from '@vueuse/core'
 import usePurchaseListStore from '@/store/purchaseList'
 import { ITEM_STATUS_CHECKED } from '@/constants.js'
+
+const formatted = useDateFormat(useNow(), 'YYYY-MM-DD HH:mm:ss')
 
 const listStore = usePurchaseListStore()
 const itemsList = computed(() =>
@@ -24,7 +27,7 @@ function formatQuantity(item) {
   if (item.quantity == item.checked_quantity) {
     return item.quantity
   }
-  return `${item.checked_quantity} out of ${item.quantity}`
+  return `${item.checked_quantity} / ${item.quantity}`
 }
 
 function formatItem(item) {

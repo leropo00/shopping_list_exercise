@@ -5,7 +5,7 @@
         <td class="py-4 px-6 border-b border-gray-200">
           <input
             type="text"
-            class="border-black outline"
+            class="border-black outline w-full"
             id="updated_item_name"
             placeholder="Item name"
             v-model="itemUpdatedData.item_name"
@@ -16,7 +16,7 @@
           <input
             type="number"
             min="1"
-            class="border-black outline w-24"
+            class="border-black outline w-12 md:w-32"
             id="updated_item_quantity"
             v-model="itemUpdatedData.quantity"
             @keyup.enter="updateItemData(item.id)"
@@ -25,13 +25,13 @@
         <td class="py-4 px-6 border-b border-gray-200">
           <button
             type="button"
-            class="border-black outline mr-4 p-2"
+            class="cursor-pointer md:mr-3 lg:mr-6"
             @click="updateItemData(item.id)"
           >
-            Update Item
+            <CheckCircleIcon class="block size-6" aria-hidden="true" />
           </button>
-          <button type="button" class="border-black outline p-2" @click="cancelUpdate()">
-            Cancel update
+          <button type="button" class="cursor-pointer" @click="cancelUpdate()">
+            <XCircleIcon class="block size-6" aria-hidden="true" />
           </button>
         </td>
       </template>
@@ -44,13 +44,19 @@
         <td class="py-4 px-6 border-b border-gray-200">
           <button
             type="button"
-            class="border-black outline mr-4 p-2"
+            class="cursor-pointer md:mr-3 lg:mr-6"
+            title="Edit item"
             @click="prepareItemForEdit(item)"
           >
-            Edit item
+            <PencilSquareIcon class="block size-6" aria-hidden="true" />
           </button>
-          <button type="button" class="border-black outline p-2" @click="deleteItem(item.id)">
-            Delete item
+          <button
+            type="button"
+            class="cursor-pointer"
+            title="Delete item"
+            @click="deleteItem(item.id)"
+          >
+            <TrashIcon class="block size-6" aria-hidden="true" />
           </button>
         </td>
       </template>
@@ -69,6 +75,7 @@ import {
   HTTP_CODE_NO_CONTENT,
   ITEM_STATUS_UNCHECKED,
 } from '@/constants.js'
+import { PencilSquareIcon, TrashIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/vue/24/solid'
 
 const listStore = usePurchaseListStore()
 const itemsList = computed(() =>

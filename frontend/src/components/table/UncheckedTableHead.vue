@@ -8,7 +8,7 @@
     <th class="w-1/2 py-4 px-6 text-left font-bold uppercase">
       <input
         type="text"
-        class="border-black outline"
+        class="border-black outline w-full"
         id="new_item_name"
         placeholder="Item name"
         v-model="itemInsertedData.item_name"
@@ -19,14 +19,16 @@
       <input
         type="number"
         min="1"
-        class="border-black outline w-24"
+        class="border-black outline w-8 md:w-32"
         id="new_item_quantity"
         v-model="itemInsertedData.quantity"
         @keyup.enter="addItem()"
       />
     </th>
     <th class="w-1/2 py-4 px-6 text-left font-bold uppercase">
-      <button type="button" class="border-black outline p-2" @click="addItem()">Add item</button>
+      <button type="button" class="cursor-pointer" title="Add item" @click="addItem()">
+        <PlusCircleIcon class="block size-6" aria-hidden="true" />
+      </button>
     </th>
   </tr>
 </template>
@@ -36,6 +38,7 @@ import { ref } from 'vue'
 import usePurchaseListStore from '@/store/purchaseList'
 import axiosClient from '@/axios.js'
 import { URL_CREATE_PURCHASE_ITEM, HTTP_CODE_CREATED } from '@/constants.js'
+import { PlusCircleIcon } from '@heroicons/vue/24/solid'
 
 const listStore = usePurchaseListStore()
 
