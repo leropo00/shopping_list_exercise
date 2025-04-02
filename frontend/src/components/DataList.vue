@@ -2,33 +2,33 @@
   <div class="shadow-lg rounded-lg overflow-hidden mx-4 md:mx-10">
     <table class="w-full table-fixed">
       <thead>
-        <tr class="bg-gray-100">
-          <th class="w-1/4 py-4 px-6 text-left text-gray-600 font-bold uppercase">
+        <tr class="bg-gray-300">
+          <th class="w-1/3 py-4 px-6 text-left text-black font-bold uppercase">
             <button
               type="button"
-              class="border-black outline p-2"
-              :class="{ 'bg-sky-300': selectedType == ITEM_STATUS_UNCHECKED }"
+              class="cursor-pointer rounded border-black outline p-2"
+              :class="{ 'bg-indigo-600 text-white': selectedType == ITEM_STATUS_UNCHECKED }"
               @click="changeItemStatus(ITEM_STATUS_UNCHECKED)"
             >
               Purchase List
             </button>
           </th>
-          <th class="w-1/4 py-4 px-6 text-left text-gray-600 font-bold uppercase">
+          <th class="w-1/3 py-4 px-6 text-left text-black font-bold uppercase">
             <button
               type="button"
-              class="border-black outline p-2"
-              :class="{ 'bg-sky-300': selectedType == ITEM_STATUS_IN_SHOPPING }"
+              class="cursor-pointer rounded border-black outline p-2"
+              :class="{ 'bg-indigo-600 text-white': selectedType == ITEM_STATUS_IN_SHOPPING }"
               @click="changeItemStatus(ITEM_STATUS_IN_SHOPPING)"
             >
               In shopping
             </button>
           </th>
-          <th class="w-1/4 py-4 px-6 text-left text-gray-600 font-bold uppercase">
+          <th class="w-1/3 py-4 px-6 text-left text-black font-bold uppercase">
             <button
               type="button"
-              class="border-black outline p-2"
+              class="cursor-pointer rounded border-black outline p-2"
               @click="changeItemStatus(ITEM_STATUS_CHECKED)"
-              :class="{ 'bg-sky-300': selectedType == ITEM_STATUS_CHECKED }"
+              :class="{ 'bg-indigo-600 text-white': selectedType == ITEM_STATUS_CHECKED }"
             >
               History
             </button>

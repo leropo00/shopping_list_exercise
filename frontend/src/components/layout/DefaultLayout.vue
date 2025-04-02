@@ -29,7 +29,7 @@ function logout() {
 
 <template>
   <div class="min-h-full">
-    <Disclosure as="nav" class="bg-gray-400" v-slot="{ open }">
+    <Disclosure as="nav" class="bg-gray-300" v-slot="{ open }">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 items-center justify-between">
           <div class="flex items-center">
@@ -43,7 +43,7 @@ function logout() {
               <Menu as="div" class="relative ml-3">
                 <div>
                   <MenuButton
-                    class="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                    class="relative flex cursor-pointer max-w-xs pr-4 items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                   >
                     <span class="absolute -inset-1.5" />
                     <span class="sr-only">Open user menu</span>
@@ -67,7 +67,10 @@ function logout() {
                     class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none"
                   >
                     <MenuItem>
-                      <button @click="logout" :class="['block px-4 py-2 text-sm text-gray-700']">
+                      <button
+                        @click="logout"
+                        :class="['block px-4 py-2 text-sm text-gray-700 cursor-pointer']"
+                      >
                         Sign out
                       </button>
                     </MenuItem>
@@ -79,7 +82,7 @@ function logout() {
           <div class="-mr-2 flex md:hidden">
             <!-- Mobile menu button -->
             <DisclosureButton
-              class="relative inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+              class="relative cursor-pointer inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-white hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
             >
               <span class="absolute -inset-0.5" />
               <span class="sr-only">Open main menu</span>
@@ -108,7 +111,7 @@ function logout() {
           <div class="mt-3 space-y-1 px-2">
             <DisclosureButton
               @click="logout"
-              class="block rounded-md px-3 py-2 text-base font-medium text-black bg-white hover:bg-gray-700 hover:text-white"
+              class="block rounded-md cursor-pointer px-3 py-2 text-base font-medium text-black bg-white hover:bg-gray-700 hover:text-white"
             >
               Sign out
             </DisclosureButton>

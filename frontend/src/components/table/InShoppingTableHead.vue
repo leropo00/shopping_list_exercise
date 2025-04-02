@@ -1,9 +1,7 @@
 <template>
-  <tr class="bg-gray-100">
-    <th class="w-1/2 py-4 px-6 text-left text-gray-600 font-bold uppercase">Item for purchase</th>
-    <th colspan="2" class="w-1/2 py-4 px-6 text-left text-gray-600 font-bold uppercase">
-      Purchased
-    </th>
+  <tr class="bg-gray-300">
+    <th class="w-1/2 py-4 px-6 text-left text-black font-bold uppercase">Item for purchase</th>
+    <th colspan="2" class="w-1/2 py-4 px-6 text-left text-black font-bold uppercase">Purchased</th>
   </tr>
 </template>
 
