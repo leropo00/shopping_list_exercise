@@ -30,7 +30,7 @@ class PurchaseListController extends Controller
         $item = DB::transaction(function() use($request) {
             $userId = $request->user()->id;
             $item = PurchaseItem::create([
-                'item_name' => strip_tags($request->item_name),
+                'item_name' => $request->item_name,
                 'quantity' => $request->quantity,
             ]);
             PurchaseListEvent::create([
@@ -69,7 +69,7 @@ class PurchaseListController extends Controller
 
         $item = DB::transaction(function() use($request, $existingItem) {
             $userId = $request->user()->id;
-            $existingItem->item_name = strip_tags($request->item_name);
+            $existingItem->item_name = $request->item_name;
             $existingItem->quantity = $request->quantity;
             $item = $existingItem->save();
             PurchaseListEvent::create([

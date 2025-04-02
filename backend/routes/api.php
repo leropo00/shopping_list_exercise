@@ -6,7 +6,7 @@ use App\Http\Controllers\ImportExportDataController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PurchaseListController;
 
-Route::middleware(['auth:sanctum'])
+Route::middleware(['auth:sanctum', 'XssSanitizer'])
     ->group(function () {
         Route::get('/user', function (Request $request) {
             return $request->user();

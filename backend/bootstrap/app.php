@@ -19,6 +19,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
         ]);
+        $middleware->alias([
+            'XssSanitizer' => \App\Http\Middleware\XssSanitization::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
