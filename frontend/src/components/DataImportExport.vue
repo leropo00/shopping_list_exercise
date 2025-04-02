@@ -1,14 +1,22 @@
 <template>
   <main>
     <div
-      class="flex flex-col md:flex-row justify-center items-center gap-2 mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8"
+      class="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-2 mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8"
     >
+      <button
+        type="submit"
+        @click="refreshList()"
+        class="cursor-pointer rounded-md bg-indigo-600 hover:bg-indigo-500 px-3 py-1 basis-full grow md:basis-1/4 w-full text-sm/6 font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+      >
+        Refresh list
+      </button>
+
       <FileUpload />
 
       <button
         type="submit"
         @click="downloadJsonData()"
-        class="rounded-md mr-4 bg-red-600 px-3 py-1 text-sm/6 font-semibold text-white shadow-sm hover:bg-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700"
+        class="cursor-pointer rounded-md bg-indigo-600 hover:bg-indigo-500 px-3 py-1 basis-full grow md:basis-1/4 w-full text-sm/6 font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
       >
         Export data
       </button>
@@ -16,7 +24,7 @@
       <button
         type="submit"
         @click="deleteList()"
-        class="rounded-md bg-red-600 px-3 py-1 text-sm/6 font-semibold text-white shadow-sm hover:bg-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700"
+        class="cursor-pointer rounded-md bg-indigo-600 hover:bg-indigo-500 px-3 py-1 basis-full grow md:basis-1/4 w-full text-sm/6 font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
       >
         Clear List
       </button>
@@ -52,6 +60,8 @@ function deleteList() {
     }
   })
 }
+
+function refreshList() {}
 </script>
 
 <style scoped></style>
