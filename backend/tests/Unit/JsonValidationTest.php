@@ -87,7 +87,7 @@ class JsonValidationTest extends TestCase
         );
     }
 
-    public function test_error_checke_largerl(): void
+    public function test_error_quantity_checked_larger_than_quantity(): void
     {
         Exceptions::fake();
         $json = [[

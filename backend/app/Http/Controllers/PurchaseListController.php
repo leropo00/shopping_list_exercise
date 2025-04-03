@@ -57,9 +57,9 @@ class PurchaseListController extends Controller
 
         $existingItem = PurchaseItem::findOrFail($id);
         if ($existingItem->status != PurchaseItemStatus::UNCHECKED->value) {
-            return response([  'message' => 'This item can no longer be edited',
-                'errors' => [ERROR_EXISTING_ITEM],
-            ], ResponseCode::HTTP_BAD_REQUEST );            
+            return response([  'message' => 'Item is not editable',
+                'errors' => [ERROR_NON_EDITABLE_ITEM],
+            ], ResponseCode::HTTP_BAD_REQUEST );
         }
 
         if ($existingItem->item_name != $request->item_name && 
@@ -67,10 +67,9 @@ class PurchaseListController extends Controller
                 ->whereNot('id', $id)
                 ->where('item_name', $request->item_name)
                 ->count() > 0) {
-    
                 return response([  'message' => 'Item with the same name alredy exists',
-                    'errors' => [ERROR_NON_EDITABLE_ITEM],
-                ], ResponseCode::HTTP_BAD_REQUEST );
+                    'errors' => [ERROR_EXISTING_ITEM],
+                ], ResponseCode::HTTP_BAD_REQUEST );            
             }
 
         $item = DB::transaction(function() use($request, $existingItem) {
