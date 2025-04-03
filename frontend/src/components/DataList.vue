@@ -37,7 +37,7 @@
           </th>
         </tr>
         <UncheckedTableHead v-if="selectedType == ITEM_STATUS_UNCHECKED" />
-        <InShoppingTableHead v-if="selectedType == ITEM_STATUS_IN_SHOPPING" />
+        <InShoppingTableHead v-if="selectedType == ITEM_STATUS_IN_SHOPPING" userId="user.id" />
         <CheckedTableHead v-else-if="selectedType == ITEM_STATUS_CHECKED" />
       </thead>
       <UncheckedTableTbody v-if="selectedType == ITEM_STATUS_UNCHECKED" />

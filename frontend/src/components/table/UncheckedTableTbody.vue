@@ -26,11 +26,17 @@
           <button
             type="button"
             class="cursor-pointer md:mr-3 lg:mr-6"
+            title="Update data"
             @click="updateItemData(item.id)"
           >
             <CheckCircleIcon class="block size-6" aria-hidden="true" />
           </button>
-          <button type="button" class="cursor-pointer" @click="cancelUpdate()">
+          <button
+            type="button"
+            class="cursor-pointer"
+            @click="cancelUpdate()"
+            title="Cancel update"
+          >
             <XCircleIcon class="block size-6" aria-hidden="true" />
           </button>
         </td>
