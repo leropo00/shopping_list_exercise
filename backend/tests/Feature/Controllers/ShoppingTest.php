@@ -9,9 +9,6 @@ use App\Enums\PurchaseItemStatus;
 use App\Models\PurchaseItem;
 use App\Models\User;
 
-use Illuminate\Support\Facades\DB;
-
-
 class ShoppingTest extends TestCase
 {
     use DatabaseTransactions;
@@ -131,7 +128,6 @@ class ShoppingTest extends TestCase
 
         $this->actingAs($user)->postJson('/api/shopping_list/finish')->assertStatus(ResponseCode::HTTP_OK);
 
-
         //  check that data is consistent
         $this->assertDatabaseHas(TABLE_PURCHASE_LIST, [
             'item_name' => 'unchecked_item',
@@ -141,24 +137,25 @@ class ShoppingTest extends TestCase
         $this->assertDatabaseMissing(TABLE_PURCHASE_LIST, [
             'item_name' => 'unchecked_item',
             "status" => PurchaseItemStatus::CHECKED->value,
-
-        ]);
-        $this->assertDatabaseHas(TABLE_PURCHASE_LIST, [
-            'item_name' => 'partialy_checked_item',
-            'quantity' => 4,
-            "status" => PurchaseItemStatus::UNCHECKED->value,
-        ]);
-        $this->assertDatabaseHas(TABLE_PURCHASE_LIST, [
-            'item_name' => 'partialy_checked_item',
-            'quantity' => 1,
-            "status" => PurchaseItemStatus::CHECKED->value,
         ]);
         $this->assertDatabaseHas(TABLE_PURCHASE_LIST, [
             'item_name' => 'checked_item',
             'quantity' => 3,
+            'checked_quantity' => 3,
+            "status" => PurchaseItemStatus::CHECKED->value,
+        ]);
+
+        $this->assertDatabaseHas(TABLE_PURCHASE_LIST, [
+            'item_name' => 'partialy_checked_item',
+            'quantity' => 4,
+            'checked_quantity' => 0,
+            "status" => PurchaseItemStatus::UNCHECKED->value,
+        ]);
+        $this->assertDatabaseHas(TABLE_PURCHASE_LIST, [
+            'item_name' => 'partialy_checked_item',
+            'quantity' => 2,
+            'checked_quantity' => 1,
             "status" => PurchaseItemStatus::CHECKED->value,
         ]);
      }
-
-
 }

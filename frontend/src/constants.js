@@ -26,6 +26,8 @@ const URL_EXPORT_JSON = '/api/purchase_list_data'
 const URL_IMPORT_JSON = URL_EXPORT_JSON
 
 const URL_START_SHOPPING = '/api/shopping_list'
+const URL_CHECK_QUANTITY_SHOPPING = '/api/shopping_list/'
+const URL_FINISH_SHOPPING = '/api/shopping_list/finish'
 
 export {
   HTTP_CODE_SUCCESS,
@@ -48,4 +50,6 @@ export {
   URL_EXPORT_JSON,
   URL_IMPORT_JSON,
   URL_START_SHOPPING,
+  URL_CHECK_QUANTITY_SHOPPING,
+  URL_FINISH_SHOPPING,
 }

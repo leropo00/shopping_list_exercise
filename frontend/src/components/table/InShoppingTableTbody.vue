@@ -22,7 +22,7 @@
           v-if="item.quantity > 0"
           @click="startPartialCheckedQuantity(item)"
         >
-          <XCircleIcon class="block size-6" aria-hidden="true" />
+          <ReceiptPercentIcon class="block size-6" aria-hidden="true" />
         </button>
         <button
           type="button"
@@ -41,9 +41,14 @@
 <script setup>
 import { computed } from 'vue'
 import usePurchaseListStore from '@/store/purchaseList'
-import { XCircleIcon, DocumentCheckIcon } from '@heroicons/vue/24/solid'
-import { ITEM_STATUS_IN_SHOPPING } from '@/constants.js'
+import { XCircleIcon, DocumentCheckIcon, ReceiptPercentIcon } from '@heroicons/vue/24/solid'
+import {
+  ITEM_STATUS_IN_SHOPPING,
+  URL_CHECK_QUANTITY_SHOPPING,
+  HTTP_CODE_SUCCESS,
+} from '@/constants.js'
 import useUserStore from '@/store/user.js'
+import axiosClient from '@/axios.js'
 
 const listStore = usePurchaseListStore()
 const itemsList = computed(() =>
@@ -53,7 +58,19 @@ const itemsList = computed(() =>
 const userStore = useUserStore()
 const userId = computed(() => userStore.user.id)
 
-function updateCheckedQuantity(itemId, checkedQuantity) {}
+function updateCheckedQuantity(itemId, checkedQuantity) {
+  axiosClient
+    .put(URL_CHECK_QUANTITY_SHOPPING + itemId, { checked_quantity: checkedQuantity })
+    .then(async (response) => {
+      if (response.status === HTTP_CODE_SUCCESS) {
+        await listStore.fetchList()
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+      // errors.value = error.response.data.errors
+    })
+}
 
 function startPartialCheckedQuantity(item) {
   console.log(item)

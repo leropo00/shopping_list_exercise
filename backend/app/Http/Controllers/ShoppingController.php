@@ -15,13 +15,13 @@ class ShoppingController extends Controller
     public function start(Request $request)
     {
         if (PurchaseItem::inShopping()->count() > 0) {
-                return response([  'message' => 'Items are already in shopping, wait until shopping is done',
+                return response(['message' => 'Items are already in shopping, wait until shopping is done',
                 'errors' => [ERROR_ITEMS_ALREADY_IN_SHOPPING],
             ], ResponseCode::HTTP_BAD_REQUEST );
         }
 
         if (PurchaseItem::editable()->count() == 0) {
-            return response([  'message' => 'No items are available for shopping',
+            return response(['message' => 'No items are available for shopping',
                 'errors' => [ERROR_NOT_ITEMS_FOR_SHOPPING],
             ], ResponseCode::HTTP_BAD_REQUEST );
         }
@@ -37,53 +37,58 @@ class ShoppingController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'checked_quantity' => ['required', 'numeric','min:1'],
+            'checked_quantity' => ['required', 'numeric','min:0'],
         ]);
 
         $existingItem = PurchaseItem::findOrFail($id);
 
         if ($existingItem->status != PurchaseItemStatus::IN_SHOPPING->value) {
-            return response([  'message' => 'Item is not in shopping',
+            return response(['message' => 'Item is not in shopping',
                 'errors' => [ERROR_ITEM_NOT_IN_SHOPPING],
             ], ResponseCode::HTTP_BAD_REQUEST );
         }
         if ($existingItem->quantity < $request->checked_quantity ) {
-            return response([  'message' => 'Checked quantity is larger that quantity field',
+            return response(['message' => 'Checked quantity is larger that quantity field',
                 'errors' => [ERROR_CHECKED_QUANITY_LARGER_THAN_QUANTITY],
             ], ResponseCode::HTTP_BAD_REQUEST );            
         }
 
-        $item = DB::transaction(function() use($request, $existingItem) {
-            $userId = $request->user()->id;
+        if ($existingItem->shopping_owner != $request->user()->id) {
+            return response(['message' => 'User is not the shopping owner',
+                'errors' => [ERROR_USER_NOT_SHOPPING_OWNER],
+            ], ResponseCode::HTTP_BAD_REQUEST );
+        }
+
+        DB::transaction(function() use($request, $existingItem) {
             $existingItem->checked_quantity = $request->checked_quantity;
-            $item = $existingItem->save();
-            $this->triggerShoppingEvent($userId);
-            return $item;
+            $existingItem->save();
+            $this->triggerShoppingEvent($request->user()->id);
         });		
 
-        return response($item, ResponseCode::HTTP_OK);
+        return response(['remain_quantity' => $existingItem->quantity -  $existingItem->checked_quantity], ResponseCode::HTTP_OK);
     }
 
     public function complete(Request $request)
     {
         $userId = $request->user()->id;
-        $queryRef = PurchaseItem::inShopping()->where('shopping_owner', $userId);
-        $recordCount = $queryRef->count();
+        $recordCount = $this->prepareQueryStart($userId)->count();
 
         if ($recordCount == 0) {
-            return response([  '' => 'User has no items in shopping',
+            return response(['message' => 'User has no items in shopping',
                 'errors' => [ERROR_NO_ITEMS_IN_SHOPPING],
             ], ResponseCode::HTTP_BAD_REQUEST );
         }
 
-        DB::transaction(function() use($queryRef, $userId) {
+        DB::transaction(function() use($userId) {
             // return those without checked quantity, back to checked status
-            $queryRef->where('checked_quantity', '=', 0)
-                     ->update(['status' => PurchaseItemStatus::UNCHECKED->value, 'shopping_owner' => null]);
+            $this->prepareQueryStart($userId)
+                    ->where('checked_quantity', '=', 0)
+                    ->update(['status' => PurchaseItemStatus::UNCHECKED->value, 'shopping_owner' => null]);
 
             // remaning quantity that was not checked is added back to items with same name
             // or a new items if item with same name is not present in unchecked items
-            $partialyChecked = $queryRef->where('checked_quantity', '<', 'quantity')->get();
+            $partialyChecked = $this->prepareQueryStart($userId)->where('checked_quantity', '<', 'quantity')->get();
+
             foreach ($partialyChecked as $data) {
                 $existingItem = PurchaseItem::editable()->where('item_name', $data->item_name)->first();
                 if ($existingItem) {
@@ -98,7 +103,8 @@ class ShoppingController extends Controller
                 ]);
             }
 
-            $queryRef->where('checked_quantity', '>', 0)
+            $this->prepareQueryStart($userId)
+                ->where('checked_quantity', '>', 0)
                 ->update(['status' => PurchaseItemStatus::CHECKED->value, 
                 'checked_by_user_id' => $userId,
                 'checked_date' =>  Carbon::now(),
@@ -108,6 +114,10 @@ class ShoppingController extends Controller
         return response(['count_added_to_checkout' => $recordCount], ResponseCode::HTTP_OK);
     }
     
+    private function prepareQueryStart($userId) 
+    {
+        return PurchaseItem::inShopping()->where('shopping_owner', $userId);
+    }
 
     private function triggerShoppingEvent($userId) 
     {
