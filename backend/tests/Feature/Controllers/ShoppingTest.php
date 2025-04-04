@@ -102,6 +102,12 @@ class ShoppingTest extends TestCase
             "status" => PurchaseItemStatus::IN_SHOPPING->value,
             "shopping_owner" =>  $user->id,
         ])->id;
+        $idPartialyCheckedNonExisting = PurchaseItem::create([
+            "item_name" => "partialy_checked_item_non_existing",
+            "quantity" => 2,
+            "status" => PurchaseItemStatus::IN_SHOPPING->value,
+            "shopping_owner" =>  $user->id,
+        ])->id;
         $idCompletelyChecked = PurchaseItem::create([
             "item_name" => "checked_item",
             "quantity" => 3,
@@ -112,6 +118,9 @@ class ShoppingTest extends TestCase
 
         // send into shopping and do some checkout
         $this->actingAs($user)->putJson('/api/shopping_list/' . $idPartialyChecked , [
+            'checked_quantity' => 1,
+        ])->assertStatus(ResponseCode::HTTP_OK);
+        $this->actingAs($user)->putJson('/api/shopping_list/' . $idPartialyCheckedNonExisting , [
             'checked_quantity' => 1,
         ])->assertStatus(ResponseCode::HTTP_OK);
         $this->actingAs($user)->putJson('/api/shopping_list/' . $idCompletelyChecked , [
@@ -132,6 +141,7 @@ class ShoppingTest extends TestCase
         $this->assertDatabaseHas(TABLE_PURCHASE_LIST, [
             'item_name' => 'unchecked_item',
             'quantity' => 1,
+            'checked_quantity' => 0,
             "status" => PurchaseItemStatus::UNCHECKED->value,
         ]);
         $this->assertDatabaseMissing(TABLE_PURCHASE_LIST, [
@@ -143,6 +153,19 @@ class ShoppingTest extends TestCase
             'quantity' => 3,
             'checked_quantity' => 3,
             "status" => PurchaseItemStatus::CHECKED->value,
+        ]);
+
+        $this->assertDatabaseHas(TABLE_PURCHASE_LIST, [
+            'item_name' => 'partialy_checked_item_non_existing',
+            'quantity' => 2,
+            'checked_quantity' => 1,
+            "status" => PurchaseItemStatus::CHECKED->value,
+        ]);
+        $this->assertDatabaseHas(TABLE_PURCHASE_LIST, [
+            'item_name' => 'partialy_checked_item_non_existing',
+            'quantity' => 1,
+            'checked_quantity' => 0,
+            "status" => PurchaseItemStatus::UNCHECKED->value,
         ]);
 
         $this->assertDatabaseHas(TABLE_PURCHASE_LIST, [

@@ -87,18 +87,21 @@ class ShoppingController extends Controller
 
             // remaning quantity that was not checked is added back to items with same name
             // or a new items if item with same name is not present in unchecked items
-            $partialyChecked = $this->prepareQueryStart($userId)->where('checked_quantity', '<', 'quantity')->get();
+            $partialyChecked = $this->prepareQueryStart($userId)
+                ->where('checked_quantity', '>', 0)
+                ->whereRaw('checked_quantity < quantity')->get();
 
             foreach ($partialyChecked as $data) {
                 $existingItem = PurchaseItem::editable()->where('item_name', $data->item_name)->first();
+                $quantityDifference = ($data['quantity'] - $data['checked_quantity']);
                 if ($existingItem) {
-                    $existingItem->quantity = $existingItem->quantity + ($data['quantity'] - $data['checked_quantity']);
+                    $existingItem->quantity = $existingItem->quantity + $quantityDifference;
                     $existingItem->save();
                     continue;
                 }
                 PurchaseItem::create([
                     'item_name' => $data->item_name,
-                    'quantity' => $data->quantity,
+                    'quantity' => $quantityDifference,
                     'status' => PurchaseItemStatus::UNCHECKED->value,
                 ]);
             }
