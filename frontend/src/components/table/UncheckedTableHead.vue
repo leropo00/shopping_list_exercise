@@ -97,6 +97,7 @@ function startShopping() {
     .post(URL_START_SHOPPING)
     .then(async (response) => {
       if (response.status === HTTP_CODE_SUCCESS) {
+        listStore.changeSelectedTab(ITEM_STATUS_IN_SHOPPING)
         await listStore.fetchList()
       }
     })

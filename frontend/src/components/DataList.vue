@@ -10,7 +10,9 @@
               <button
                 type="button"
                 class="cursor-pointer rounded md:rounded-t-full border-black md:outline p-2 basis-full grow"
-                :class="{ 'bg-indigo-600 text-white': selectedType == ITEM_STATUS_UNCHECKED }"
+                :class="{
+                  'bg-indigo-600 text-white': selectedType == ITEM_STATUS_UNCHECKED,
+                }"
                 @click="changeItemStatus(ITEM_STATUS_UNCHECKED)"
               >
                 Purchase List
@@ -18,7 +20,9 @@
               <button
                 type="button"
                 class="cursor-pointer rounded md:rounded-t-full border-black md:outline p-2 basis-full grow"
-                :class="{ 'bg-indigo-600 text-white': selectedType == ITEM_STATUS_IN_SHOPPING }"
+                :class="{
+                  'bg-indigo-600 text-white': selectedType == ITEM_STATUS_IN_SHOPPING,
+                }"
                 @click="changeItemStatus(ITEM_STATUS_IN_SHOPPING)"
                 v-if="inShoppingCounts > 0"
               >
@@ -28,7 +32,9 @@
                 type="button"
                 class="cursor-pointer rounded md:rounded-t-full border-black md:outline p-2 basis-full grow"
                 @click="changeItemStatus(ITEM_STATUS_CHECKED)"
-                :class="{ 'bg-indigo-600 text-white': selectedType == ITEM_STATUS_CHECKED }"
+                :class="{
+                  'bg-indigo-600 text-white': selectedType == ITEM_STATUS_CHECKED,
+                }"
                 v-if="checkedCount > 0"
               >
                 History
@@ -48,7 +54,7 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
+import { computed, onMounted, onBeforeUnmount } from 'vue'
 import ReconnectingEventSource from 'reconnecting-eventsource'
 import useUserStore from '@/store/user.js'
 import usePurchaseListStore from '@/store/purchaseList'
@@ -65,9 +71,8 @@ import InShoppingTableTbody from '@/components/table/InShoppingTableTbody.vue'
 import CheckedTableHead from '@/components/table/CheckedTableHead.vue'
 import CheckedTableTbody from '@/components/table/CheckedTableTbody.vue'
 
-const selectedType = ref(ITEM_STATUS_UNCHECKED)
-
 const listStore = usePurchaseListStore()
+const selectedType = computed(() => listStore.selectedType)
 
 const checkedCount = computed(
   () => listStore.data.filter((item) => item.status == ITEM_STATUS_CHECKED).length,
@@ -139,6 +144,6 @@ onBeforeUnmount(() => {
 })
 
 function changeItemStatus(status) {
-  selectedType.value = status
+  listStore.changeSelectedTab(status)
 }
 </script>

@@ -18,13 +18,14 @@
 import { ref } from 'vue'
 import usePurchaseListStore from '@/store/purchaseList'
 import axiosClient from '@/axios.js'
-import { HTTP_CODE_SUCCESS, URL_FINISH_SHOPPING } from '@/constants.js'
+import { HTTP_CODE_SUCCESS, ITEM_STATUS_UNCHECKED, URL_FINISH_SHOPPING } from '@/constants.js'
 
 const listStore = usePurchaseListStore()
 
 function finishShopping() {
   axiosClient.post(URL_FINISH_SHOPPING).then(async (response) => {
     if (response.status === HTTP_CODE_SUCCESS) {
+      listStore.changeSelectedTab(ITEM_STATUS_UNCHECKED)
       await listStore.fetchList()
     }
   })

@@ -1,10 +1,12 @@
 import { defineStore } from 'pinia'
 import axiosClient from '../axios.js'
 import { URL_GET_PURCHASE_ITEMS } from '../constants.js'
+import { ITEM_STATUS_UNCHECKED } from '../constants.js'
 
 const usePurchaseListStore = defineStore('purchaseList', {
   state: () => ({
     data: [],
+    selectedType: ITEM_STATUS_UNCHECKED,
   }),
   actions: {
     async fetchList() {
@@ -17,6 +19,9 @@ const usePurchaseListStore = defineStore('purchaseList', {
     },
     removeItem(itemId) {
       this.data = this.data.filter((item) => item.id !== itemId)
+    },
+    changeSelectedTab(selectedType) {
+      this.selectedType = selectedType
     },
   },
 })
