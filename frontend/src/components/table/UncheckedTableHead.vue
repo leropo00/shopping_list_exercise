@@ -1,26 +1,43 @@
 <template>
   <tr class="bg-gray-300">
-    <th class="w-1/4 py-4 px-6 text-left text-black font-bold uppercase">Item</th>
-    <th class="w-1/4 py-4 px-6 text-left text-black font-bold uppercase">Quantity</th>
-    <th class="w-1/4 py-4 px-6 text-left text-black font-bold uppercase">Actions</th>
+    <th colspan="3" class="w-1/4 py-4 px-6 text-left text-black font-bold uppercase table-cell sm:hidden">Item for purchase</th>
+
+    <th class="w-1/4 py-4 px-6 text-left text-black font-bold uppercase hidden sm:table-cell">Item</th>
+    <th class="w-1/4 py-4 px-6 text-left text-black font-bold uppercase hidden sm:table-cell">Quantity</th>
+    <th class="w-1/4 py-4 px-6 text-left text-black font-bold uppercase hidden sm:table-cell">Actions</th>
   </tr>
   <tr class="bg-white">
-    <th class="w-1/2 py-4 px-6 text-left font-bold uppercase">
+    <th colspan="2" class="w-1/2 py-4 px-6 text-left font-bold uppercase table-cell sm:hidden">
       <input
         type="text"
         class="border-black outline w-full"
-        id="new_item_name"
+        placeholder="Item name"
+        v-model="itemInsertedData.item_name"
+        @keyup.enter="addItem()"
+      />
+
+      <input
+        type="number"
+        min="1"
+        class="border-black outline w-16 mt-2"
+        v-model="itemInsertedData.quantity"
+        @keyup.enter="addItem()"
+      />
+    </th>
+    <th class="w-1/2 py-4 px-6 text-left font-bold uppercase hidden sm:table-cell">
+      <input
+        type="text"
+        class="border-black outline w-full"
         placeholder="Item name"
         v-model="itemInsertedData.item_name"
         @keyup.enter="addItem()"
       />
     </th>
-    <th class="w-1/2 py-4 px-6 text-left font-bold uppercase">
+    <th class="w-1/2 py-4 px-6 text-left font-bold uppercase hidden sm:table-cell">
       <input
         type="number"
         min="1"
-        class="border-black outline w-8 md:w-32"
-        id="new_item_quantity"
+        class="border-black outline w-16 md:w-32"
         v-model="itemInsertedData.quantity"
         @keyup.enter="addItem()"
       />
@@ -50,6 +67,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 import usePurchaseListStore from '@/store/purchaseList'
+import { useNotification } from "@kyvg/vue3-notification";
+
 import axiosClient from '@/axios.js'
 import {
   URL_CREATE_PURCHASE_ITEM,
@@ -61,12 +80,12 @@ import {
 } from '@/constants.js'
 import { PlusCircleIcon, ShoppingCartIcon } from '@heroicons/vue/24/solid'
 
-const listStore = usePurchaseListStore()
+const { notify }  = useNotification()
 
+const listStore = usePurchaseListStore()
 const uncheckedCounts = computed(
   () => listStore.data.filter((item) => item.status == ITEM_STATUS_UNCHECKED).length,
 )
-
 const inShoppingCounts = computed(
   () => listStore.data.filter((item) => item.status == ITEM_STATUS_IN_SHOPPING).length,
 )
@@ -77,6 +96,16 @@ const itemInsertedData = ref({
 })
 
 function addItem() {
+
+  if (itemInsertedData.value.item_name.trim().length == 0) {
+    notify({
+      title: "Error",
+      text: "Item name is empty",
+      type: 'error',
+    });
+    return;
+  }
+
   axiosClient
     .post(URL_CREATE_PURCHASE_ITEM, itemInsertedData.value)
     .then(async (response) => {

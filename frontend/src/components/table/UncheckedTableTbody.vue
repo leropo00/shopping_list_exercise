@@ -2,7 +2,26 @@
   <tbody class="bg-white">
     <tr v-for="item in itemsList" :key="item.id">
       <template v-if="item.id == itemUpdatedData.item_id">
-        <td class="py-4 px-6 border-b border-gray-200">
+        <td colspan="2" class="py-4 px-6 border-b border-gray-200 table-cell sm:hidden">
+          <input
+            type="text"
+            class="border-black outline w-full"
+            id="updated_item_name"
+            placeholder="Item name"
+            v-model="itemUpdatedData.item_name"
+            @keyup.enter="updateItemData(item.id)"
+          />
+
+          <input
+            type="number"
+            min="1"
+            class="border-black outline w-12 md:w-32 mt-2"
+            id="updated_item_quantity"
+            v-model="itemUpdatedData.quantity"
+            @keyup.enter="updateItemData(item.id)"
+          />
+        </td>
+        <td class="py-4 px-6 border-b border-gray-200 hidden sm:table-cell">
           <input
             type="text"
             class="border-black outline w-full"
@@ -12,7 +31,7 @@
             @keyup.enter="updateItemData(item.id)"
           />
         </td>
-        <td class="py-4 px-6 border-b border-gray-200">
+        <td class="py-4 px-6 border-b border-gray-200 hidden sm:table-cell">
           <input
             type="number"
             min="1"
@@ -43,10 +62,13 @@
       </template>
 
       <template v-else>
-        <td class="py-4 px-6 border-b border-gray-200">
+        <td colspan="2" class="py-4 px-6 border-b border-gray-200 table-cell sm:hidden">
+          {{ formatItem(item) }}
+        </td>
+        <td class="py-4 px-6 border-b border-gray-200 hidden sm:table-cell">
           {{ item.item_name }}
         </td>
-        <td class="py-4 px-6 border-b border-gray-200">{{ item.quantity }}</td>
+        <td class="py-4 px-6 border-b border-gray-200 hidden sm:table-cell">{{ item.quantity }}</td>
         <td class="py-4 px-6 border-b border-gray-200">
           <button
             type="button"
@@ -111,7 +133,6 @@ function updateItemData() {
     })
     .catch((error) => {
       console.log(error)
-      // errors.value = error.response.data.errors
     })
 }
 
@@ -127,6 +148,13 @@ function deleteItem(itemId) {
       listStore.removeItem(itemId)
     }
   })
+}
+
+function formatItem(item) {
+  if (item.quantity == 1) {
+    return item.item_name
+  }
+  return `${item.quantity} x ${item.item_name}`
 }
 </script>
 
