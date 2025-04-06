@@ -42,6 +42,23 @@ services:
     ports:
       - "3306:3306"
 
+  db_test:
+    platform: ${DOCKER_MYSQL_PLATFORM} #this line is optional if you are using Mac Silicon chip (M1/M2/M3)
+    image: mysql:8.0
+    container_name: execise-test-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE_TEST}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+    volumes:
+      - dbdata-test:/var/lib/mysql
+    networks:
+      - exercise-network
+    ports:
+      - "3316:3306"
+
   node:
     platform: ${DOCKER_NODE_PLATFORM} #this line is optional if you are using Mac Silicon chip (M1/M2/M3)
     build: ./frontend
@@ -62,4 +79,6 @@ networks:
 
 volumes:
   dbdata:
+    driver: local
+  dbdata-test:
     driver: local
