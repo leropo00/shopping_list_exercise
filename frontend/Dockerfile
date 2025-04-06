@@ -19,8 +19,6 @@ RUN npm install
 # use a more specific COPY, as this will include files like `Dockerfile`, we don't really need inside our containers.
 COPY . ./
 
-COPY .env.sample /usr/src/app/.env
-
 
 # Expose the port Vite runs on
 EXPOSE 3000

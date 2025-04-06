@@ -2,17 +2,13 @@
 
 services:
   app:
-    build:
-      context: ./backend
+    build: ./backend
     image: exercise-laravel-app
     container_name: exercise-laravel-app
     restart: unless-stopped
     working_dir: /var/www
     volumes:
       - ./backend/:/var/www
-      - ./backend/.env:/var/www/.env
-    environment:
-      - APP_ENV=local
     networks:
       - exercise-network
 
