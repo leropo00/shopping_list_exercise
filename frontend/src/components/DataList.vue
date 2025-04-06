@@ -62,6 +62,9 @@ import {
   ITEM_STATUS_UNCHECKED,
   ITEM_STATUS_CHECKED,
   ITEM_STATUS_IN_SHOPPING,
+  EVENTS_TRIGGERING_REQUEST,
+  PURCHASE_LIST_EVENT_DELETE,
+  PURCHASE_LIST_EVENT_DELETE_ALL,
 } from '../constants.js'
 
 import UncheckedTableHead from '@/components/table/UncheckedTableHead.vue'
@@ -111,17 +114,24 @@ onMounted(() => {
     try {
       const dataParsed = JSON.parse(e.data)
       console.log(dataParsed)
-      for (const element of dataParsed) {
-        // actions before, add maybe
-        if (element.user_id == user.id) {
-          continue
-        }
-        if (element.event == 'add' || element.event == 'edit') {
-          await listStore.fetchList()
-          return
-        } else if (element.event == 'delete_all') {
+      
+      // remove events from current user as this were already taken into account in interface
+      const otherUsersEvents = dataParsed.filter(item => item.user_id != user.id)
+
+      // certain events require to reload the whole list
+      // if at least one of those is present reload the whole list
+      if (otherUsersEvents.filter(item => EVENTS_TRIGGERING_REQUEST.includes(item.event)).length > 0 ) {
+        await listStore.fetchList()
+        return
+      }
+
+      // certain events can be easily done in interface without reading the whole list data
+      // other events could also be added here, if changed data(for example checked_quantity)
+      // would be stored in database event in json field
+      for (const element of otherUsersEvents) {
+       if (element.event == PURCHASE_LIST_EVENT_DELETE_ALL) {
           listStore.clearList()
-        } else if (element.event == 'delete' && element.record_id) {
+        } else if (element.event == PURCHASE_LIST_EVENT_DELETE) {
           listStore.removeItem(element.record_id)
         }
       }
@@ -132,6 +142,7 @@ onMounted(() => {
 
   evtSource.onerror = async (e) => {
     console.log('error occured, refresh state, in case any events were lost')
+    console.log(e);
     await listStore.fetchList()
   }
 })

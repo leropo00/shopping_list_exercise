@@ -28,22 +28,26 @@ class NotificationController extends Controller
                 // Fetch the unread notifications for the authenticated user
                 $notifications = PurchaseListEvent::all();
 
-                // If there are notifications, send them to the frontend
-                if ($notifications->isNotEmpty()) {
-                    // Format notifications as JSON and send them via SSE
-                    echo "data: " . json_encode($notifications) . "\n\n";
+                if ($notifications->isEmpty()) {
+                    sleep(5);
+                    return;
                 }
-                
-                // Flush the output buffer
-                ob_flush();
-                flush();
+
+                // If there are notifications, send them to the frontend
+                // Format notifications as JSON and send them via SSE
+                echo "data: " . json_encode($notifications) . "\n\n";  
 
                 // clearing occurs before flushing the buffer if action would take time
                 // don't clear whole table, as it is possible new events might occur in between
                 DB::table(TABLE_PURCHASE_LIST_EVENTS)->whereIn('id', $notifications->pluck('id')->all())->delete();
 
+                // Flush the output buffer
+                ob_flush();
+                flush();
+
                 // Sleep for a few seconds before checking again
                 sleep(5);
+
             }
         }, 200, $headers);
     }
