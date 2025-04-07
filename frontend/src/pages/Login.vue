@@ -22,7 +22,6 @@ function submit() {
         router.push({ name: 'Home' })
       })
       .catch((error) => {
-        console.log(error.response)
         errorMessage.value = error.response.data.message
       })
   })

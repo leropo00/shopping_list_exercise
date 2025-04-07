@@ -100,14 +100,12 @@ const shoppingUserId = computed(() => {
 let evtSource
 
 onMounted(() => {
-  console.log('mounted')
   evtSource = new ReconnectingEventSource(
     import.meta.env.VITE_API_BASE_URL + '/api/notifications',
     { withCredentials: true },
   )
 
   evtSource.onmessage = async (e) => {
-    console.log('onmessage')
 
     if (e.data == null || e.data.length == 0) {
       return
@@ -115,7 +113,6 @@ onMounted(() => {
 
     try {
       const dataParsed = JSON.parse(e.data)
-      console.log(dataParsed)
       
       // remove events from current user as this were already taken into account in interface
       const otherUsersEvents = dataParsed.filter(item => item.user_id != user.id)
@@ -138,13 +135,10 @@ onMounted(() => {
         }
       }
     } catch (err) {
-      console.log(err)
     }
   }
 
   evtSource.onerror = async (e) => {
-    console.log('error occured, refresh state, in case any events were lost')
-    console.log(e);
     await listStore.fetchList()
   }
 })
@@ -152,7 +146,6 @@ onBeforeUnmount(() => {
   try {
     evtSource.close()
   } catch (err) {
-    console.log(err)
   }
 })
 

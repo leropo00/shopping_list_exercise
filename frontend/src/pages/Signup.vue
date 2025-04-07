@@ -28,7 +28,6 @@ function register() {
         router.push({ name: 'Home' })
       })
       .catch((error) => {
-        console.log(error.response.data)
         errors.value = error.response.data.errors
       })
   })
