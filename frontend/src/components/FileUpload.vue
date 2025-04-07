@@ -23,7 +23,7 @@
 
 <script setup>
 import axiosClient from '@/axios.js'
-import { URL_IMPORT_JSON, HTTP_CODE_CREATED } from '../constants.js'
+import { URL_IMPORT_JSON, HTTP_CODE_CREATED, HTTP_CODE_INVALID_DATA } from '../constants.js'
 import usePurchaseListStore from '@/store/purchaseList'
 import { useNotification } from "@kyvg/vue3-notification";
 import { formatErrorResponse } from '@/helpers.js'
@@ -43,6 +43,15 @@ function submit(file) {
       await listStore.fetchList()
     }
   }).catch((error) => {
+    if (error.status == HTTP_CODE_INVALID_DATA) {
+      notify({
+        title: t("errors.title"),
+        text: t('errors.invalid_json_data'),
+        type: 'error',
+      });
+      return
+    }
+
     notify({
         title: t("errors.title"),
         text: t(formatErrorResponse(error)),

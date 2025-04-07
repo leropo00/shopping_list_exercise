@@ -105,8 +105,6 @@ const itemInsertedData = ref({
 })
 
 function addItem() {
-
-  /*
   if (itemInsertedData.value.item_name.trim().length == 0) {
     notify({
       title: t("errors.title"),
@@ -115,8 +113,6 @@ function addItem() {
     });
     return;
   }
-  */
-
   axiosClient
     .post(URL_CREATE_PURCHASE_ITEM, itemInsertedData.value)
     .then(async (response) => {

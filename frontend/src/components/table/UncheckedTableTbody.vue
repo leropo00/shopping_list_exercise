@@ -125,6 +125,15 @@ function prepareItemForEdit(item) {
 }
 
 function updateItemData() {
+  if (itemUpdatedData.value.item_name.trim().length == 0) {
+    notify({
+      title: t("errors.title"),
+      text: t("errors.missing_item_name"),
+      type: 'error',
+    });
+    return;
+  }
+
   axiosClient
     .put(URL_UPDATE_PURCHASE_ITEM + itemUpdatedData.value.item_id, itemUpdatedData.value)
     .then(async (response) => {

@@ -57,7 +57,7 @@
         "existing_item_with_same_name": "Že obstaja predmet z istim imenom",
         "non_editable_item": "Predmeta ni mogoče posodobiti",
         "not_json_file": "Datoteka ni formata json",
-        "invalid_json_data": "Json datoteka nima usterznih podaktov",
+        "invalid_json_data": "Json datoteka nima usterzno formatiranih podaktov",
         "items_already_in_shopping": "Na enkrat je lahko samo eno nakupovanje",
         "no_items_available_for_shopping": "Nakupovanje ni aktivni",
         "item_not_in_shopping": "Predmet ni v nakupovanju",
