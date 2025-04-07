@@ -1,10 +1,17 @@
 <template>
   <tbody class="bg-white">
     <tr v-for="item in itemsList" :key="item.id">
-      <td colspan="2" class="py-4 px-6 border-b border-gray-200">
+      <td colspan="3" class="py-4 px-6 border-b border-gray-200 table-cell sm:hidden">
+        {{ formatItem(item) }}
+        <br>
+        {{ formatDate(new Date(item.checked_date), 'DD.MM.YYYY HH:mm:ss') }}
+      </td>
+
+
+      <td colspan="2" class="py-4 px-6 border-b border-gray-200 hidden sm:table-cell">
         {{ formatItem(item) }}
       </td>
-      <td class="py-4 px-6 border-b border-gray-200">{{ formatDate(new Date(item.checked_date), 'DD.MM.YYYY HH:mm:ss') }}</td>
+      <td class="py-4 px-6 border-b border-gray-200 hidden sm:table-cell">{{ formatDate(new Date(item.checked_date), 'DD.MM.YYYY HH:mm:ss') }}</td>
     </tr>
   </tbody>
 </template>

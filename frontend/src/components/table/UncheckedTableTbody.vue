@@ -132,7 +132,9 @@ function updateItemData() {
       }
     })
     .catch((error) => {
-      console.log(error)
+      console.log(error.response.data)
+      console.log(error.response.data.message)
+      console.log(error.response.data.message.errors[0])
     })
 }
 
@@ -147,6 +149,10 @@ function deleteItem(itemId) {
     if (response.status === HTTP_CODE_NO_CONTENT) {
       listStore.removeItem(itemId)
     }
+  }).catch((error) => {
+    console.log(error.response.data)
+    console.log(error.response.data.message)
+    console.log(error.response.data.message.errors[0])
   })
 }
 

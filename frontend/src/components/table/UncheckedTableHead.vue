@@ -1,6 +1,6 @@
 <template>
   <tr class="bg-gray-300">
-    <th colspan="3" class="w-1/4 py-4 px-6 text-left text-black font-bold uppercase table-cell sm:hidden">Item for purchase</th>
+    <th colspan="3" class="w-1/4 py-4 px-6 text-center text-black font-bold uppercase table-cell sm:hidden">Item for purchase</th>
 
     <th class="w-1/4 py-4 px-6 text-left text-black font-bold uppercase hidden sm:table-cell">Item</th>
     <th class="w-1/4 py-4 px-6 text-left text-black font-bold uppercase hidden sm:table-cell">Quantity</th>

@@ -1,9 +1,12 @@
 <template>
   <tr class="bg-gray-300">
-    <th colspan="2" class="w-2/3 py-4 px-6 text-left text-black font-bold uppercase">
+    <th colspan="3" class="w-2/3 py-4 px-6 text-center text-black font-bold uppercase table-cell sm:hidden">
+      Item purchased on
+    </th>
+    <th colspan="2" class="w-2/3 py-4 px-6 text-left text-black font-bold uppercase hidden sm:table-cell">
       Item purchased
     </th>
-    <th class="w-1/3 py-4 px-6 text-left text-black font-bold uppercase">Purchased date</th>
+    <th class="w-1/3 py-4 px-6 text-left text-black font-bold uppercase hidden sm:table-cell">Purchased date</th>
   </tr>
 </template>
 

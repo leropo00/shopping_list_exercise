@@ -1,10 +1,27 @@
 <template>
   <tbody class="bg-white">
     <tr v-for="item in itemsList" :key="item.id">
-      <td class="py-4 px-6 border-b border-gray-200">
+      <td colspan="2" class="py-4 px-6 border-b border-gray-200 sm:hidden">
+        {{ formatItem(item) }}
+        <br>
+        <input
+            type="number"
+            min="0"
+            :max="itemPartialyCheckedData.max_checked_quantity"
+            class="border-black outline w-12 md:w-32"
+            id="updated_item_checked_quantity"
+            v-if="item.id == itemPartialyCheckedData.item_id"
+            v-model="itemPartialyCheckedData.checked_quantity"
+            @keyup.enter="updatePartialCheckedQuantity()"
+          />
+        <span v-else class="italic">
+          {{ formatQuantityWithLabel(item) }}
+        </span>
+      </td>
+      <td class="py-4 px-6 border-b border-gray-200 hidden sm:table-cell">
         {{ formatItem(item) }}
       </td>
-      <td class="py-4 px-6 border-b border-gray-200" v-if="item.id == itemPartialyCheckedData.item_id">
+      <td class="py-4 px-6 border-b border-gray-200 hidden sm:table-cell" v-if="item.id == itemPartialyCheckedData.item_id">
         <input
             type="number"
             min="0"
@@ -15,7 +32,7 @@
             @keyup.enter="updatePartialCheckedQuantity()"
           />
       </td>
-      <td v-else class="py-4 px-6 border-b border-gray-200">{{ formatQuantity(item) }}</td>
+      <td v-else class="py-4 px-6 border-b border-gray-200 hidden sm:table-cell">{{ formatQuantity(item) }}</td>
       <td v-if="userId == item.shopping_owner" class="py-4 px-6 border-b border-gray-200">
         <template v-if="item.id == itemPartialyCheckedData.item_id">
           <button
@@ -124,6 +141,18 @@ function startPartialCheckedQuantity(item) {
   itemPartialyCheckedData.value.checked_quantity = item.checked_quantity > 0 ? item.checked_quantity: 1;
   itemPartialyCheckedData.value.max_checked_quantity = item.quantity
 }
+
+function formatQuantityWithLabel(item) {
+  if (!item.checked_quantity) {
+    return 'Not bought'
+  }
+
+  if (item.quantity == item.checked_quantity) {
+    return 'Purchased'
+  }
+  return `Purchased ${item.checked_quantity} out of ${item.quantity}`
+}
+
 
 function formatQuantity(item) {
   if (!item.checked_quantity) {

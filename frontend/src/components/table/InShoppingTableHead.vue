@@ -1,8 +1,20 @@
 <template>
   <tr class="bg-gray-300">
-    <th class="w-1/2 py-4 px-6 text-left text-black font-bold uppercase">Item for purchase</th>
-    <th class="w-1/2 py-4 px-6 text-left text-black font-bold uppercase">Purchased</th>
-    <th class="w-1/2 py-4 px-6 text-left text-black font-bold uppercase">
+    <th class="w-1/2 py-4 px-6 text-left text-black font-bold uppercase table-cell sm:hidden">Item</th>
+    <th colspan="2" class="w-1/2 sm:w-1/3 py-4 px-6 text-left text-black font-bold uppercase table-cell sm:hidden">
+      <button
+        type="button"
+        class="cursor-pointer rounded-md bg-indigo-600 hover:bg-indigo-500 px-3 py-1 w-full text-sm/6 font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+        v-if="shoppingOwners.includes(userId)"
+        @click="finishShopping()"
+      >
+        Finish shopping
+      </button>
+    </th>
+
+    <th class="w-1/3 py-4 px-6 text-left text-black font-bold uppercase hidden sm:table-cell">Item for purchase</th>
+    <th class="w-1/3 py-4 px-6 text-left text-black font-bold uppercase hidden sm:table-cell">Purchased</th>
+    <th class="w-1/2 sm:w-1/3 py-4 px-6 text-left text-black font-bold uppercase hidden sm:table-cell">
       <button
         type="button"
         class="cursor-pointer rounded-md bg-indigo-600 hover:bg-indigo-500 px-3 py-1 w-full text-sm/6 font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
@@ -40,6 +52,11 @@ function finishShopping() {
       listStore.changeSelectedTab(ITEM_STATUS_UNCHECKED)
       await listStore.fetchList()
     }
+  })
+  .catch((error) => {
+      console.log(error.response.data)
+      console.log(error.response.data.message)
+      console.log(error.response.data.message.errors[0])
   })
 }
 </script>
