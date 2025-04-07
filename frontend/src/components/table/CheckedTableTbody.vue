@@ -4,14 +4,14 @@
       <td colspan="3" class="py-4 px-6 border-b border-gray-200 table-cell sm:hidden">
         {{ formatItem(item) }}
         <br>
-        {{ formatDate(new Date(item.checked_date), 'DD.MM.YYYY HH:mm:ss') }}
+        {{ formatDate(new Date(item.checked_date), t('date_format')) }}
       </td>
 
 
       <td colspan="2" class="py-4 px-6 border-b border-gray-200 hidden sm:table-cell">
         {{ formatItem(item) }}
       </td>
-      <td class="py-4 px-6 border-b border-gray-200 hidden sm:table-cell">{{ formatDate(new Date(item.checked_date), 'DD.MM.YYYY HH:mm:ss') }}</td>
+      <td class="py-4 px-6 border-b border-gray-200 hidden sm:table-cell">{{ formatDate(new Date(item.checked_date), t('date_format')) }}</td>
     </tr>
   </tbody>
 </template>
@@ -21,6 +21,8 @@ import { computed } from 'vue'
 import { useDateFormat, useNow, formatDate } from '@vueuse/core'
 import usePurchaseListStore from '@/store/purchaseList'
 import { ITEM_STATUS_CHECKED } from '@/constants.js'
+import {useI18n} from 'vue-i18n' 
+const {t} = useI18n();
 
 const listStore = usePurchaseListStore()
 const itemsList = computed(() => {

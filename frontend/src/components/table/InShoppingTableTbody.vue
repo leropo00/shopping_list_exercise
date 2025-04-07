@@ -38,7 +38,7 @@
           <button
             type="button"
             class="cursor-pointer md:mr-3 lg:mr-6"
-            title="Update Checked Quantity"
+            :title="t('tooltip.update_checked')"
             @click="updatePartialCheckedQuantity()"
           >
             <CheckCircleIcon class="block size-6" aria-hidden="true" />
@@ -47,7 +47,7 @@
             type="button"
             class="cursor-pointer md:mr-3 lg:mr-6"
             @click="cancelPartialUpdate()"
-            title="Cancel update"
+            :title="t('tooltip.cancel_update')"
           >
             <XCircleIcon class="block size-6" aria-hidden="true" />
           </button>
@@ -56,16 +56,16 @@
             <button
               type="button"
               class="cursor-pointer md:mr-3 lg:mr-6"
-              title="Purcase Item"
+              :title="t('tooltip.purchase' )"
               @click="updateCheckedQuantity(item.id, item.quantity)"
-              v-if="item.checked_quantity == 0"
+              v-if="item.checked_quantity < item.quantity"
             >
               <DocumentCheckIcon class="block size-6" aria-hidden="true" />
             </button>
             <button
               type="button"
               class="cursor-pointer md:mr-3 lg:mr-6"
-              title="Select Purchased Quantity"
+              :title="t('tooltip.partial_purchase' )"
               v-if="item.quantity > 1"
               @click="startPartialCheckedQuantity(item)"
             >
@@ -74,7 +74,7 @@
             <button
               type="button"
               class="cursor-pointer"
-              title="Remove Purchased Item"
+              :title="t('tooltip.remove_purchased' )"
               v-if="item.checked_quantity > 0"
               @click="updateCheckedQuantity(item.id, 0)"
             >
@@ -97,6 +97,8 @@ import {
 } from '@/constants.js'
 import useUserStore from '@/store/user.js'
 import axiosClient from '@/axios.js'
+import {useI18n} from 'vue-i18n' 
+const {t} = useI18n();
 
 const userStore = useUserStore()
 const userId = computed(() => userStore.user.id)
@@ -144,25 +146,25 @@ function startPartialCheckedQuantity(item) {
 
 function formatQuantityWithLabel(item) {
   if (!item.checked_quantity) {
-    return 'Not bought'
+    return t('data.in_shopping.body_mobile.not_purchased');
   }
 
   if (item.quantity == item.checked_quantity) {
-    return 'Purchased'
+    return t('data.in_shopping.body_mobile.purchased');
   }
-  return `Purchased ${item.checked_quantity} out of ${item.quantity}`
+  return t('data.in_shopping.body_mobile.purchased_partial', { 'count': item.checked_quantity, 'total': item.quantity})
 }
 
 
 function formatQuantity(item) {
   if (!item.checked_quantity) {
-    return 'NO'
+    return t('data.in_shopping.body.not_purchased');
   }
 
   if (item.quantity == item.checked_quantity) {
-    return 'YES'
+    return t('data.in_shopping.body.purchased');
   }
-  return `${item.checked_quantity} out of ${item.quantity}`
+  return t('data.in_shopping.body.purchased_partial', { 'count': item.checked_quantity, 'total': item.quantity})
 }
 
 function formatItem(item) {

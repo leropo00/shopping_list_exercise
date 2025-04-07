@@ -1,0 +1,90 @@
+{
+    "app_name": "Shopping List App",
+    "date_format": "MM/DD/YYYY hh:mm:ss a",
+    "header": {
+        "refresh": "Refresh List",
+        "import": "Import data file",
+        "export": "Export data",
+        "clear": "Clear List",
+        "signout": "Sign Out"
+    },
+    "tabs": {
+        "purchase_list":"Purchase List",
+        "in_shopping":"In shopping",
+        "history":"History"
+    },
+    "data": {
+        "unchecked": {
+            "header": {
+                "item_mobile": "Item for purchase",
+                "item": "Item",
+                "quantity": "Quantity",
+                "actions": "Actions"
+            }
+        },
+        "in_shopping": {
+            "header": {
+                "item_mobile": "Item",
+                "item": "Item for purchase",
+                "quantity": "Purchased",
+                "shopping_button": "Finish shopping"
+            },
+            "body_mobile": {
+                "purchased_partial": "Purchased {count} out of {total}",
+                "purchased": "Purchased",
+                "not_purchased": "Not yet bought"
+            },
+            "body": {
+                "purchased_partial": "{count} out of {total}",
+                "purchased": "Yes",
+                "not_purchased": "No"
+            }
+        },
+        "checked": {
+            "header": {
+                "item": "Item purchased on",
+                "item_mobile": "Item purchased on",
+                "date": "Purchased date"
+            }
+        }
+    },
+    "not_found": {
+       "title": "Page not found",
+       "message": "Sorry, we couldn’t find the page you’re looking for.",
+       "back": "Go back home"
+    },
+    "login": {
+        "title": "Sign in to your account",
+        "field_email": "Email address.",
+        "field_password": "Password",
+        "sing_in": "Sign in",
+        "not_a_member": "Not a member?",
+        "create_account": "Create an account"
+    },
+    "signup": {
+        "title": "Create new Account",
+        "field_fullname": "Full Name.",
+        "field_email": "Email address",
+        "field_password": "Password",
+        "field_repeat_password": "Repeat Password",
+        "create_account": "Create an Account",
+        "existing_account": "Already have an account?",
+        "login_from_here": "Login from here"
+    },
+    "placeholder" :{
+        "item_name": "Item name"
+    },
+    "tooltip" :{
+        "add_item": "Add item",
+        "update_checked" : "Update Checked Quantity",
+        "purchase" : "Purcase Item",
+        "partial_purchase" : "Select Purchased Quantity",
+        "remove_purchased" : "Remove Purchased Item",
+        "start_shopping" : "Shop for items",
+        "update_data" : "Update data",
+        "edit_data" : "Edit item",
+        "cancel_update" : "Cancel update",
+        "delete_item" : "Delete item"
+    }
+}
+ 

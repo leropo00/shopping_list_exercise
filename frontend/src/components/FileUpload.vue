@@ -1,24 +1,3 @@
-<script setup>
-import axiosClient from '@/axios.js'
-import { URL_IMPORT_JSON, HTTP_CODE_CREATED } from '../constants.js'
-import usePurchaseListStore from '@/store/purchaseList'
-
-const listStore = usePurchaseListStore()
-
-function submit(file) {
-  // workaround so that the same file can be repeatedly
-  document.getElementById('file-upload').value = null
-  const formData = new FormData()
-  formData.append('file', file)
-  axiosClient.post(URL_IMPORT_JSON, formData).then(async (res) => {
-    console.log(res)
-    if (res.status === HTTP_CODE_CREATED) {
-      await listStore.fetchList()
-    }
-  })
-}
-</script>
-
 <template>
   <div class="basis-full grow md:basis-1/4 w-full py-1">
     <form @submit.prevent="submit">
@@ -34,12 +13,38 @@ function submit(file) {
               @input="submit($event.target.files[0])"
               class="sr-only"
             />
-            Import data file
+            {{t('header.import')}}
           </div>
         </label>
       </div>
     </form>
   </div>
 </template>
+
+<script setup>
+import axiosClient from '@/axios.js'
+import { URL_IMPORT_JSON, HTTP_CODE_CREATED } from '../constants.js'
+import usePurchaseListStore from '@/store/purchaseList'
+import {useI18n} from 'vue-i18n' 
+const {t} = useI18n();
+
+const listStore = usePurchaseListStore()
+
+function submit(file) {
+  // workaround so that the same file can be repeatedly
+  document.getElementById('file-upload').value = null
+  const formData = new FormData()
+  formData.append('file', file)
+  axiosClient.post(URL_IMPORT_JSON, formData).then(async (res) => {
+    if (res.status === HTTP_CODE_CREATED) {
+      await listStore.fetchList()
+    }
+  }).catch((error) => {
+    console.log(error.response.data)
+    console.log(error.response.data.message)
+    console.log(error.response.data.message.errors[0])
+  })
+}
+</script>
 
 <style scoped></style>

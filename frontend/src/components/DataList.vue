@@ -15,7 +15,7 @@
                 }"
                 @click="changeItemStatus(ITEM_STATUS_UNCHECKED)"
               >
-                Purchase List
+                {{ t('tabs.purchase_list' )}}                
               </button>
               <button
                 type="button"
@@ -26,7 +26,7 @@
                 @click="changeItemStatus(ITEM_STATUS_IN_SHOPPING)"
                 v-if="inShoppingCounts > 0"
               >
-                In shopping
+                {{ t('tabs.in_shopping' )}}
               </button>
               <button
                 type="button"
@@ -37,7 +37,7 @@
                 }"
                 v-if="checkedCount > 0"
               >
-                History
+                {{ t('tabs.history' )}}
               </button>
             </div>
           </th>
@@ -58,6 +58,8 @@ import { computed, onMounted, onBeforeUnmount } from 'vue'
 import ReconnectingEventSource from 'reconnecting-eventsource'
 import useUserStore from '@/store/user.js'
 import usePurchaseListStore from '@/store/purchaseList'
+import {useI18n} from 'vue-i18n' 
+const {t} = useI18n();
 import {
   ITEM_STATUS_UNCHECKED,
   ITEM_STATUS_CHECKED,

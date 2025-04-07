@@ -8,17 +8,15 @@
         @click="refreshList()"
         class="cursor-pointer rounded-md bg-indigo-600 hover:bg-indigo-500 px-3 py-1 basis-full grow md:basis-1/4 w-full text-sm/6 font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
       >
-        Refresh list
+         {{t('header.refresh')}}
       </button>
-
       <FileUpload />
-
       <button
         type="submit"
         @click="downloadJsonData()"
         class="cursor-pointer rounded-md bg-indigo-600 hover:bg-indigo-500 px-3 py-1 basis-full grow md:basis-1/4 w-full text-sm/6 font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
       >
-        Export data
+         {{t('header.export')}}
       </button>
 
       <button
@@ -26,7 +24,7 @@
         @click="deleteList()"
         class="cursor-pointer rounded-md bg-indigo-600 hover:bg-indigo-500 px-3 py-1 basis-full grow md:basis-1/4 w-full text-sm/6 font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
       >
-        Clear List
+        {{t('header.clear')}}
       </button>
     </div>
   </main>
@@ -40,16 +38,26 @@ import {
   URL_EXPORT_JSON,
   URL_DELETE_ALL_PURCHASE_ITEMS,
 } from '../constants.js'
+import { useNotification } from "@kyvg/vue3-notification";
 import fileDownload from 'js-file-download'
 import usePurchaseListStore from '@/store/purchaseList'
 import FileUpload from '../components/FileUpload.vue'
+import {useI18n} from 'vue-i18n' 
+const {t} = useI18n();
+
 const listStore = usePurchaseListStore()
+const { notify }  = useNotification()
+
 
 function downloadJsonData() {
   axiosClient.get(URL_EXPORT_JSON, { responseType: 'blob' }).then((response) => {
     if (response.status === HTTP_CODE_SUCCESS) {
       fileDownload(response.data, 'output.json')
     }
+  }).catch((error) => {
+    console.log(error.response.data)
+    console.log(error.response.data.message)
+    console.log(error.response.data.message.errors[0])
   })
 }
 
@@ -58,6 +66,10 @@ function deleteList() {
     if (response.status === HTTP_CODE_NO_CONTENT) {
       listStore.clearList()
     }
+  }).catch((error) => {
+    console.log(error.response.data)
+    console.log(error.response.data.message)
+    console.log(error.response.data.message.errors[0])
   })
 }
 

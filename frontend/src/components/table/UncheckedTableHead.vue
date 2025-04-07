@@ -1,17 +1,25 @@
 <template>
   <tr class="bg-gray-300">
-    <th colspan="3" class="w-1/4 py-4 px-6 text-center text-black font-bold uppercase table-cell sm:hidden">Item for purchase</th>
+    <th colspan="3" class="w-1/4 py-4 px-6 text-center text-black font-bold uppercase table-cell sm:hidden">        
+        {{ t('data.unchecked.header.item_mobile')}}
+    </th>
 
-    <th class="w-1/4 py-4 px-6 text-left text-black font-bold uppercase hidden sm:table-cell">Item</th>
-    <th class="w-1/4 py-4 px-6 text-left text-black font-bold uppercase hidden sm:table-cell">Quantity</th>
-    <th class="w-1/4 py-4 px-6 text-left text-black font-bold uppercase hidden sm:table-cell">Actions</th>
+    <th class="w-1/4 py-4 px-6 text-left text-black font-bold uppercase hidden sm:table-cell">       
+         {{ t('data.unchecked.header.item')}}
+    </th>
+    <th class="w-1/4 py-4 px-6 text-left text-black font-bold uppercase hidden sm:table-cell">
+      {{ t('data.unchecked.header.quantity')}}
+    </th>
+    <th class="w-1/4 py-4 px-6 text-left text-black font-bold uppercase hidden sm:table-cell">
+      {{ t('data.unchecked.header.actions')}}
+    </th>
   </tr>
   <tr class="bg-white">
     <th colspan="2" class="w-1/2 py-4 px-6 text-left font-bold uppercase table-cell sm:hidden">
       <input
         type="text"
         class="border-black outline w-full"
-        placeholder="Item name"
+        :placeholder="t('placeholder.item_name')"
         v-model="itemInsertedData.item_name"
         @keyup.enter="addItem()"
       />
@@ -28,7 +36,7 @@
       <input
         type="text"
         class="border-black outline w-full"
-        placeholder="Item name"
+        :placeholder="t('placeholder.item_name')"
         v-model="itemInsertedData.item_name"
         @keyup.enter="addItem()"
       />
@@ -46,7 +54,7 @@
       <button
         type="button"
         class="cursor-pointer md:mr-3 lg:mr-6"
-        title="Add item"
+        :title="t('tooltip.add_item' )"
         @click="addItem()"
       >
         <PlusCircleIcon class="block size-6" aria-hidden="true" />
@@ -54,7 +62,7 @@
       <button
         type="button"
         class="cursor-pointer"
-        title="Shop for items"
+        :title="t('tooltip.start_shopping' )"
         @click="startShopping()"
         v-if="inShoppingCounts == 0 && uncheckedCounts > 0"
       >
@@ -79,6 +87,8 @@ import {
   ITEM_STATUS_IN_SHOPPING,
 } from '@/constants.js'
 import { PlusCircleIcon, ShoppingCartIcon } from '@heroicons/vue/24/solid'
+import {useI18n} from 'vue-i18n' 
+const {t} = useI18n();
 
 const { notify }  = useNotification()
 

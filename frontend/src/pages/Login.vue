@@ -4,8 +4,9 @@ import { ref } from 'vue'
 import axiosClient from '../axios.js'
 import router from '../router.js'
 import { URL_LOGIN, URL_CSRF_COOKIE } from '@/constants.js'
-
 import GuestLayout from '@/components/layout/GuestLayout.vue'
+import {useI18n} from 'vue-i18n' 
+const {t} = useI18n();
 
 const data = ref({
   email: '',
@@ -31,7 +32,7 @@ function submit() {
 <template>
   <GuestLayout>
     <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-      Sign in to your account
+      {{ t('login.title')}}
     </h2>
 
     <div v-if="errorMessage" class="mt-4 py-2 px-3 rounded text-white bg-red-400">
@@ -41,7 +42,8 @@ function submit() {
     <div class="mt-4 sm:mx-auto sm:w-full sm:max-w-sm">
       <form @submit.prevent="submit" class="space-y-6">
         <div>
-          <label for="email" class="block text-sm/6 font-medium text-gray-900">Email address</label>
+          <label for="email" class="block text-sm/6 font-medium text-gray-900">{{ t('login.field_email')}}
+          </label>
           <div class="mt-2">
             <input
               type="email"
@@ -58,7 +60,8 @@ function submit() {
         <div>
           <div class="flex items-center justify-between">
             <label for="  password" class="block text-sm/6 font-medium text-gray-900"
-              >Password</label
+              >{{ t('login.field_password')}}
+              </label
             >
           </div>
           <div class="mt-2">
@@ -79,19 +82,19 @@ function submit() {
             type="submit"
             class="flex w-full cursor-pointer justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Sign in
+          {{ t('login.sing_in')}}
           </button>
         </div>
       </form>
 
       <p class="mt-10 text-center text-sm/6 text-gray-500">
-        Not a member?
+        {{ t('login.not_a_member')}}
         {{ ' ' }}
         <RouterLink
           :to="{ name: 'Signup' }"
           class="font-semibold text-indigo-600 hover:text-indigo-500"
         >
-          Create an account
+        {{ t('login.create_account')}}
         </RouterLink>
       </p>
     </div>

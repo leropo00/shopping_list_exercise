@@ -1,6 +1,8 @@
 <template>
   <tr class="bg-gray-300">
-    <th class="w-1/2 py-4 px-6 text-left text-black font-bold uppercase table-cell sm:hidden">Item</th>
+    <th class="w-1/2 py-4 px-6 text-left text-black font-bold uppercase table-cell sm:hidden">
+      {{ t('data.in_shopping.header.item_mobile')}}
+    </th>
     <th colspan="2" class="w-1/2 sm:w-1/3 py-4 px-6 text-left text-black font-bold uppercase table-cell sm:hidden">
       <button
         type="button"
@@ -8,12 +10,16 @@
         v-if="shoppingOwners.includes(userId)"
         @click="finishShopping()"
       >
-        Finish shopping
+        {{ t('data.in_shopping.header.shopping_button')}}
       </button>
     </th>
 
-    <th class="w-1/3 py-4 px-6 text-left text-black font-bold uppercase hidden sm:table-cell">Item for purchase</th>
-    <th class="w-1/3 py-4 px-6 text-left text-black font-bold uppercase hidden sm:table-cell">Purchased</th>
+    <th class="w-1/3 py-4 px-6 text-left text-black font-bold uppercase hidden sm:table-cell">
+      {{ t('data.in_shopping.header.item')}}
+    </th>
+    <th class="w-1/3 py-4 px-6 text-left text-black font-bold uppercase hidden sm:table-cell">
+      {{ t('data.in_shopping.header.quantity')}}
+    </th>
     <th class="w-1/2 sm:w-1/3 py-4 px-6 text-left text-black font-bold uppercase hidden sm:table-cell">
       <button
         type="button"
@@ -21,7 +27,7 @@
         v-if="shoppingOwners.includes(userId)"
         @click="finishShopping()"
       >
-        Finish shopping
+          {{ t('data.in_shopping.header.shopping_button')}}
       </button>
     </th>
   </tr>
@@ -33,6 +39,8 @@ import usePurchaseListStore from '@/store/purchaseList'
 import useUserStore from '@/store/user.js'
 import axiosClient from '@/axios.js'
 import { HTTP_CODE_SUCCESS, ITEM_STATUS_UNCHECKED, URL_FINISH_SHOPPING } from '@/constants.js'
+import {useI18n} from 'vue-i18n' 
+const {t} = useI18n();
 
 const listStore = usePurchaseListStore()
 

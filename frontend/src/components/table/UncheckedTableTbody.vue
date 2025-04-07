@@ -6,8 +6,7 @@
           <input
             type="text"
             class="border-black outline w-full"
-            id="updated_item_name"
-            placeholder="Item name"
+            :placeholder="t('placeholder.item_name')"
             v-model="itemUpdatedData.item_name"
             @keyup.enter="updateItemData(item.id)"
           />
@@ -16,7 +15,6 @@
             type="number"
             min="1"
             class="border-black outline w-12 md:w-32 mt-2"
-            id="updated_item_quantity"
             v-model="itemUpdatedData.quantity"
             @keyup.enter="updateItemData(item.id)"
           />
@@ -25,8 +23,7 @@
           <input
             type="text"
             class="border-black outline w-full"
-            id="updated_item_name"
-            placeholder="Item name"
+            :placeholder="t('placeholder.item_name')"
             v-model="itemUpdatedData.item_name"
             @keyup.enter="updateItemData(item.id)"
           />
@@ -45,7 +42,7 @@
           <button
             type="button"
             class="cursor-pointer md:mr-3 lg:mr-6"
-            title="Update data"
+            :title="t('tooltip.update_data' )"
             @click="updateItemData(item.id)"
           >
             <CheckCircleIcon class="block size-6" aria-hidden="true" />
@@ -54,8 +51,8 @@
             type="button"
             class="cursor-pointer"
             @click="cancelUpdate()"
-            title="Cancel update"
-          >
+            :title="t('tooltip.cancel_update')"
+            >
             <XCircleIcon class="block size-6" aria-hidden="true" />
           </button>
         </td>
@@ -73,7 +70,7 @@
           <button
             type="button"
             class="cursor-pointer md:mr-3 lg:mr-6"
-            title="Edit item"
+            :title="t('tooltip.edit_data' )"
             @click="prepareItemForEdit(item)"
           >
             <PencilSquareIcon class="block size-6" aria-hidden="true" />
@@ -81,7 +78,7 @@
           <button
             type="button"
             class="cursor-pointer"
-            title="Delete item"
+            :title="t('tooltip.delete_item' )"
             @click="deleteItem(item.id)"
           >
             <TrashIcon class="block size-6" aria-hidden="true" />
@@ -104,6 +101,8 @@ import {
   ITEM_STATUS_UNCHECKED,
 } from '@/constants.js'
 import { PencilSquareIcon, TrashIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/vue/24/solid'
+import {useI18n} from 'vue-i18n' 
+const {t} = useI18n();
 
 const listStore = usePurchaseListStore()
 const itemsList = computed(() =>

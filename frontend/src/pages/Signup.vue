@@ -1,11 +1,11 @@
 <script setup>
 import { ref } from 'vue'
-
 import axiosClient from '../axios.js'
 import router from '../router.js'
 import { URL_REGISTER, URL_CSRF_COOKIE } from '../constants.js'
-
 import GuestLayout from '@/components/layout/GuestLayout.vue'
+import {useI18n} from 'vue-i18n' 
+const {t} = useI18n();
 
 const data = ref({
   name: '',
@@ -38,13 +38,14 @@ function register() {
 <template>
   <GuestLayout>
     <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-      Create new Account
+      {{ t('signup.title' )}}
     </h2>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
       <form @submit.prevent="register" class="space-y-4">
         <div>
-          <label for="name" class="block text-sm/6 font-medium text-gray-900">Full Name</label>
+          <label for="name" class="block text-sm/6 font-medium text-gray-900">{{ t('signup.field_fullname') }}
+          </label>
           <div class="mt-2">
             <input
               name="name"
@@ -58,7 +59,8 @@ function register() {
           </p>
         </div>
         <div>
-          <label for="email" class="block text-sm/6 font-medium text-gray-900">Email address</label>
+          <label for="email" class="block text-sm/6 font-medium text-gray-900">{{ t('signup.field_email') }}
+          </label>
           <div class="mt-2">
             <input
               type="email"
@@ -76,7 +78,8 @@ function register() {
 
         <div>
           <div class="flex items-center justify-between">
-            <label for="password" class="block text-sm/6 font-medium text-gray-900">Password</label>
+            <label for="password" class="block text-sm/6 font-medium text-gray-900">{{ t('signup.field_password') }}
+            </label>
           </div>
           <div class="mt-2">
             <input
@@ -95,7 +98,8 @@ function register() {
         <div>
           <div class="flex items-center justify-between">
             <label for="passwordConfirmation" class="block text-sm/6 font-medium text-gray-900"
-              >Repeat Password</label
+              >{{ t('signup.field_repeat_password') }}
+              </label
             >
           </div>
           <div class="mt-2">
@@ -114,19 +118,19 @@ function register() {
             type="submit"
             class="flex w-full justify-center cursor-pointer rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Create an Account
+          {{ t('signup.create_account') }}
           </button>
         </div>
       </form>
 
       <p class="mt-10 text-center text-sm/6 text-gray-500">
-        Already have an account?
+        {{ t('signup.existing_account') }}
         {{ ' ' }}
         <RouterLink
           :to="{ name: 'Login' }"
           class="font-semibold text-indigo-600 hover:text-indigo-500"
         >
-          Login from here
+          {{ t('signup.login_from_here') }}
         </RouterLink>
       </p>
     </div>

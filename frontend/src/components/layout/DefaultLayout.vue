@@ -1,34 +1,6 @@
-<script setup>
-import {
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-} from '@headlessui/vue'
-import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
-import axiosClient from '../../axios.js'
-import router from '../../router.js'
-import useUserStore from '../../store/user.js'
-import { computed } from 'vue'
-import { URL_LOGOUT } from '../../constants.js'
-import SvgImage from '@//assets/cart-shopping-list.svg?component'
-
-const userStore = useUserStore()
-
-const user = computed(() => userStore.user)
-
-function logout() {
-  axiosClient.post(URL_LOGOUT).then((response) => {
-    router.push({ name: 'Login' })
-  })
-}
-</script>
-
 <template>
   <div class="min-h-full">
+
     <Disclosure as="nav" class="bg-gray-300" v-slot="{ open }">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 items-center justify-between">
@@ -71,12 +43,13 @@ function logout() {
                         @click="logout"
                         :class="['block px-4 py-2 text-sm text-gray-700 cursor-pointer']"
                       >
-                        Sign out
+                        {{ t('header.signout' )}}
                       </button>
                     </MenuItem>
                   </MenuItems>
                 </transition>
               </Menu>
+              <Language class="ml-2"/>
             </div>
           </div>
           <div class="-mr-2 flex md:hidden">
@@ -108,12 +81,13 @@ function logout() {
               <div class="text-sm font-medium text-white">{{ user.email }}</div>
             </div>
           </div>
+          <Language class="ml-4 mt-2"/>
           <div class="mt-3 space-y-1 px-2">
             <DisclosureButton
               @click="logout"
               class="block rounded-md cursor-pointer px-3 py-2 text-base font-medium text-black bg-white hover:bg-gray-700 hover:text-white"
             >
-              Sign out
+              {{ t('header.signout' )}}
             </DisclosureButton>
           </div>
         </div>
@@ -123,5 +97,38 @@ function logout() {
     <RouterView />
   </div>
 </template>
+
+<script setup>
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+} from '@headlessui/vue'
+import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
+import axiosClient from '../../axios.js'
+import router from '../../router.js'
+import useUserStore from '../../store/user.js'
+import { computed } from 'vue'
+import { URL_LOGOUT } from '../../constants.js'
+import SvgImage from '@//assets/cart-shopping-list.svg?component'
+import Language from '@/components/Language.vue'
+import {useI18n} from 'vue-i18n' 
+const {t} = useI18n();
+
+const userStore = useUserStore()
+
+const user = computed(() => userStore.user)
+
+function logout() {
+  axiosClient.post(URL_LOGOUT).then((response) => {
+    router.push({ name: 'Login' })
+  })
+  
+}
+</script>
 
 <style scoped></style>

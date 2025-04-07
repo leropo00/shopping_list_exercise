@@ -3,6 +3,7 @@
 
 <template>
   <RouterView />
+  <notifications />
 </template>
 
 <style scoped>
