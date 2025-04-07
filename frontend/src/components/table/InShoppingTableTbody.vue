@@ -98,7 +98,11 @@ import {
 import useUserStore from '@/store/user.js'
 import axiosClient from '@/axios.js'
 import {useI18n} from 'vue-i18n' 
+import { useNotification } from "@kyvg/vue3-notification";
+import { formatErrorResponse } from '@/helpers.js'
+
 const {t} = useI18n();
+const { notify }  = useNotification()
 
 const userStore = useUserStore()
 const userId = computed(() => userStore.user.id)
@@ -133,8 +137,11 @@ function updateCheckedQuantity(itemId, checkedQuantity, isPartial = false) {
       }
     })
     .catch((error) => {
-      console.log(error)
-      // errors.value = error.response.data.errors
+      notify({
+        title: t("errors.title"),
+        text: t(formatErrorResponse(error)),
+        type: 'error',
+      });
     })
 }
 

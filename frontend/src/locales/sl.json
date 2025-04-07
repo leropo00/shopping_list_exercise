@@ -48,6 +48,22 @@
             }
         }
     },
+    "errors": {
+        "title": "Napaka",
+        "system_error": "Sistemska napaka v aplikaciji, ponovno poizkusi kasneje.",
+        "missing_item_name": "Manjka podatek predmet",
+        "invalid_data": "Poslani so pomanjkljivi podatki",
+        "non_exisitng_data": "Zapis ne obstaja",
+        "existing_item_with_same_name": "Že obstaja predmet z istim imenom",
+        "non_editable_item": "Predmeta ni mogoče posodobiti",
+        "not_json_file": "Datoteka ni formata json",
+        "invalid_json_data": "Json datoteka nima usterznih podaktov",
+        "items_already_in_shopping": "Na enkrat je lahko samo eno nakupovanje",
+        "no_items_available_for_shopping": "Nakupovanje ni aktivni",
+        "item_not_in_shopping": "Predmet ni v nakupovanju",
+        "user_not_shopping_owner": "Za nakupovanje je zadolžen drug uporabnik",
+        "checked_quanity_larger_than_quantity": "Kupljena količina presega zahtevano količino"
+    },
     "not_found": {
         "title": "Nezanan stran",
         "message": "Vnešena stran ne obstaja.",

@@ -17,8 +17,11 @@ import { ref } from 'vue'
 import usePurchaseListStore from '@/store/purchaseList'
 import axiosClient from '@/axios.js'
 import { URL_CREATE_PURCHASE_ITEM, HTTP_CODE_CREATED } from '@/constants.js'
+import { useNotification } from "@kyvg/vue3-notification";
+import { formatErrorResponse } from '@/helpers.js'
 import {useI18n} from 'vue-i18n' 
 const {t} = useI18n();
+const { notify }  = useNotification()
 
 const listStore = usePurchaseListStore()
 
@@ -38,8 +41,11 @@ function addItem() {
       }
     })
     .catch((error) => {
-      console.log(error)
-      // errors.value = error.response.data.errors
+      notify({
+        title: t("errors.title"),
+        text: t(formatErrorResponse(error)),
+        type: 'error',
+      });
     })
 }
 </script>

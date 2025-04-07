@@ -39,8 +39,12 @@ import usePurchaseListStore from '@/store/purchaseList'
 import useUserStore from '@/store/user.js'
 import axiosClient from '@/axios.js'
 import { HTTP_CODE_SUCCESS, ITEM_STATUS_UNCHECKED, URL_FINISH_SHOPPING } from '@/constants.js'
+import { useNotification } from "@kyvg/vue3-notification";
+import { formatErrorResponse } from '@/helpers.js'
 import {useI18n} from 'vue-i18n' 
 const {t} = useI18n();
+
+const { notify }  = useNotification()
 
 const listStore = usePurchaseListStore()
 
@@ -62,9 +66,11 @@ function finishShopping() {
     }
   })
   .catch((error) => {
-      console.log(error.response.data)
-      console.log(error.response.data.message)
-      console.log(error.response.data.message.errors[0])
+    notify({
+        title: t("errors.title"),
+        text: t(formatErrorResponse(error)),
+        type: 'error',
+      });
   })
 }
 </script>

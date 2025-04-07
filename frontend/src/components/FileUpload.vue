@@ -25,6 +25,9 @@
 import axiosClient from '@/axios.js'
 import { URL_IMPORT_JSON, HTTP_CODE_CREATED } from '../constants.js'
 import usePurchaseListStore from '@/store/purchaseList'
+import { useNotification } from "@kyvg/vue3-notification";
+import { formatErrorResponse } from '@/helpers.js'
+const { notify }  = useNotification()
 import {useI18n} from 'vue-i18n' 
 const {t} = useI18n();
 
@@ -40,9 +43,11 @@ function submit(file) {
       await listStore.fetchList()
     }
   }).catch((error) => {
-    console.log(error.response.data)
-    console.log(error.response.data.message)
-    console.log(error.response.data.message.errors[0])
+    notify({
+        title: t("errors.title"),
+        text: t(formatErrorResponse(error)),
+        type: 'error',
+      });
   })
 }
 </script>

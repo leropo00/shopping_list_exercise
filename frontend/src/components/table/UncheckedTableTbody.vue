@@ -101,8 +101,11 @@ import {
   ITEM_STATUS_UNCHECKED,
 } from '@/constants.js'
 import { PencilSquareIcon, TrashIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/vue/24/solid'
+import { useNotification } from "@kyvg/vue3-notification";
+import { formatErrorResponse } from '@/helpers.js'
 import {useI18n} from 'vue-i18n' 
 const {t} = useI18n();
+const { notify }  = useNotification()
 
 const listStore = usePurchaseListStore()
 const itemsList = computed(() =>
@@ -131,9 +134,11 @@ function updateItemData() {
       }
     })
     .catch((error) => {
-      console.log(error.response.data)
-      console.log(error.response.data.message)
-      console.log(error.response.data.message.errors[0])
+      notify({
+        title: t("errors.title"),
+        text: t(formatErrorResponse(error)),
+        type: 'error',
+      });
     })
 }
 
@@ -149,9 +154,11 @@ function deleteItem(itemId) {
       listStore.removeItem(itemId)
     }
   }).catch((error) => {
-    console.log(error.response.data)
-    console.log(error.response.data.message)
-    console.log(error.response.data.message.errors[0])
+    notify({
+        title: t("errors.title"),
+        text: t(formatErrorResponse(error)),
+        type: 'error',
+      });
   })
 }
 

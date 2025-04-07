@@ -22,7 +22,7 @@ class ShoppingController extends Controller
 
         if (PurchaseItem::editable()->count() == 0) {
             return response(['message' => 'No items are available for shopping',
-                'errors' => [ERROR_NOT_ITEMS_FOR_SHOPPING],
+                'errors' => [ERROR_NO_ITEMS_AVAILABLE_FOR_SHOPPING],
             ], ResponseCode::HTTP_BAD_REQUEST );
         }
         $userId = $request->user()->id;
@@ -75,7 +75,7 @@ class ShoppingController extends Controller
 
         if ($recordCount == 0) {
             return response(['message' => 'User has no items in shopping',
-                'errors' => [ERROR_NO_ITEMS_IN_SHOPPING],
+                'errors' => [ERROR_NO_ITEMS_AVAILABLE_FOR_SHOPPING],
             ], ResponseCode::HTTP_BAD_REQUEST );
         }
 

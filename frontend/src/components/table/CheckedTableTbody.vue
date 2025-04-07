@@ -18,11 +18,12 @@
 
 <script setup>
 import { computed } from 'vue'
-import { useDateFormat, useNow, formatDate } from '@vueuse/core'
+import { formatDate } from '@vueuse/core'
 import usePurchaseListStore from '@/store/purchaseList'
 import { ITEM_STATUS_CHECKED } from '@/constants.js'
 import {useI18n} from 'vue-i18n' 
 const {t} = useI18n();
+
 
 const listStore = usePurchaseListStore()
 const itemsList = computed(() => {

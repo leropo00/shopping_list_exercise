@@ -45,7 +45,9 @@ class ImportExportDataController extends Controller
         $fileContents = $request->file('file')->get();
         // workaround as validation inside request->validate didn't work   mimetypes:application/json,text/plain
         if (!Str::isJson($fileContents)) {
-            return response("File contents are not json", ResponseCode::HTTP_BAD_REQUEST);
+            return response([  'message' => 'File contents are not json',
+                'errors' => [ERROR_NOT_JSON_FILE],
+            ], ResponseCode::HTTP_BAD_REQUEST );
         }
         $jsonContents = json_decode($fileContents, true); 
         $this->jsonDataService->checkErrorsInJsonData($jsonContents);

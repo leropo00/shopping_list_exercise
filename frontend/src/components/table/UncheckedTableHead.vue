@@ -76,7 +76,7 @@
 import { ref, computed } from 'vue'
 import usePurchaseListStore from '@/store/purchaseList'
 import { useNotification } from "@kyvg/vue3-notification";
-
+import { formatErrorResponse } from '@/helpers.js'
 import axiosClient from '@/axios.js'
 import {
   URL_CREATE_PURCHASE_ITEM,
@@ -89,7 +89,6 @@ import {
 import { PlusCircleIcon, ShoppingCartIcon } from '@heroicons/vue/24/solid'
 import {useI18n} from 'vue-i18n' 
 const {t} = useI18n();
-
 const { notify }  = useNotification()
 
 const listStore = usePurchaseListStore()
@@ -107,14 +106,16 @@ const itemInsertedData = ref({
 
 function addItem() {
 
+  /*
   if (itemInsertedData.value.item_name.trim().length == 0) {
     notify({
-      title: "Error",
-      text: "Item name is empty",
+      title: t("errors.title"),
+      text: t("errors.missing_item_name"),
       type: 'error',
     });
     return;
   }
+  */
 
   axiosClient
     .post(URL_CREATE_PURCHASE_ITEM, itemInsertedData.value)
@@ -126,8 +127,11 @@ function addItem() {
       }
     })
     .catch((error) => {
-      console.log(error)
-      // errors.value = error.response.data.errors
+      notify({
+        title: t("errors.title"),
+        text: t(formatErrorResponse(error)),
+        type: 'error',
+      });
     })
 }
 
@@ -141,8 +145,11 @@ function startShopping() {
       }
     })
     .catch((error) => {
-      console.log(error)
-      // errors.value = error.response.data.errors
+      notify({
+        title: t("errors.title"),
+        text: t(formatErrorResponse(error)),
+        type: 'error',
+      });
     })
 }
 </script>

@@ -48,6 +48,22 @@
             }
         }
     },
+    "errors": {
+        "title": "Error",
+        "system_error": "System error in application, try again later.",
+        "missing_item_name": "Item name is not inserted",
+        "invalid_data": "Invalid data was sent",
+        "non_exisitng_data": "Record does not exists",
+        "existing_item_with_same_name": "Item with the same name already exists",
+        "non_editable_item": "Item can't be updated",
+        "not_json_file": "File is not json",
+        "invalid_json_data": "Invalid json data",
+        "items_already_in_shopping": "Shopping is in progress",
+        "no_items_available_for_shopping": "Shopping is in not in progress",
+        "item_not_in_shopping": "Item is not in shopping",
+        "user_not_shopping_owner": "You are not user who performs shopping",
+        "checked_quanity_larger_than_quantity": "Checked qunaity larger than quantity"
+    },
     "not_found": {
        "title": "Page not found",
        "message": "Sorry, we couldn’t find the page you’re looking for.",
