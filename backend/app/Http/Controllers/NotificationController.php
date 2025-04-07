@@ -36,14 +36,13 @@ class NotificationController extends Controller
                 // If there are notifications, send them to the frontend
                 // Format notifications as JSON and send them via SSE
                 echo "data: " . json_encode($notifications) . "\n\n";  
+				
+                // Flush the output buffer
+                flush();
 
                 // clearing occurs before flushing the buffer if action would take time
                 // don't clear whole table, as it is possible new events might occur in between
                 DB::table(TABLE_PURCHASE_LIST_EVENTS)->whereIn('id', $notifications->pluck('id')->all())->delete();
-
-                // Flush the output buffer
-                ob_flush();
-                flush();
 
                 // Sleep for a few seconds before checking again
                 sleep(5);

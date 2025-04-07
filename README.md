@@ -36,7 +36,8 @@ For the backend container
 # you can also run commands outside container, just use the bottom command
 # and replace sh, with the command needed
 # enter inside container
-docker exec -it exercise-laravel-app sh
+# command is run as the root user
+docker exec  -u 0  -it exercise-laravel-app sh
 # create both env files
 cp .env.sample .env
 cp .env.sample.testing .env.testing
@@ -50,6 +51,8 @@ php artisan key:generate
 php artisan migrate
 # if you wish to run the tests, these use a separate database, so another migration is needed
 php artisan migrate --env=testing
+# set permissions back to the correct user
+chown -R www-data /var/www
 # leave the container
 exit
 ```
@@ -80,7 +83,7 @@ backend/storage/app/private
 ```sh
 docker exec -it exercise-laravel-app sh
 # export command, mandatory parameter is output file
-php artisan app:export-shopping-list output.jsom
+php artisan app:export-shopping-list output.json
 # import command, mandatory parameter is the input file
 php artisan app:import-shopping-list import.json
 # leave the container
