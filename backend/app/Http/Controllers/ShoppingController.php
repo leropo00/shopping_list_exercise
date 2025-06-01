@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 use Symfony\Component\HttpFoundation\Response as ResponseCode;
 use App\Enums\PurchaseItemStatus;
 use App\Models\PurchaseItem;
@@ -12,7 +14,13 @@ use App\Models\PurchaseListEvent;
 
 class ShoppingController extends Controller
 {
-    public function start(Request $request)
+    /**
+     * Starts the shipping with purchase list items
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function start(Request $request): Response
     {
         if (PurchaseItem::inShopping()->count() > 0) {
                 return response(['message' => 'Items are already in shopping, wait until shopping is done',
@@ -34,7 +42,13 @@ class ShoppingController extends Controller
         return response(['count_in_shopping' => PurchaseItem::inShopping()->count()], ResponseCode::HTTP_OK);
     }
 
-    public function update(Request $request, string $id)
+    /**
+     * Change checked quantity for an item that is currently in_shopping
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, string $id): Response
     {
         $request->validate([
             'checked_quantity' => ['required', 'numeric','min:0'],
@@ -68,7 +82,13 @@ class ShoppingController extends Controller
         return response(['remain_quantity' => $existingItem->quantity -  $existingItem->checked_quantity], ResponseCode::HTTP_OK);
     }
 
-    public function complete(Request $request)
+    /**
+     * Finish shopping with active purchase items, adjust back the quantities, that were not pruchases in whole
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function complete(Request $request): Response
     {
         $userId = $request->user()->id;
         $recordCount = $this->prepareQueryStart($userId)->count();
@@ -117,12 +137,12 @@ class ShoppingController extends Controller
         return response(['count_added_to_checkout' => $recordCount], ResponseCode::HTTP_OK);
     }
     
-    private function prepareQueryStart($userId) 
+    private function prepareQueryStart(int $userId): Builder
     {
         return PurchaseItem::inShopping()->where('shopping_owner', $userId);
     }
 
-    private function triggerShoppingEvent($userId) 
+    private function triggerShoppingEvent(int $userId): void
     {
         PurchaseListEvent::create([
             'event' => PURCHASE_LIST_EVENT_SHOPPING,

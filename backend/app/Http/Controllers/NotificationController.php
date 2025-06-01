@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PurchaseListEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use App\Models\PurchaseListEvent;
 
 // workaround so that error Maximum execution time of 120 seconds exceeded does not happen
 // meaning SSE works after 2 minutes
@@ -13,7 +14,14 @@ ini_set('max_execution_time', 0);
 
 class NotificationController extends Controller
 {
-    public function get(Request $request)
+
+    /**
+     *  Return notification to the FE application about data changes, implemented via SSE, server sent events.
+     *
+     *  @param  \Illuminate\Http\Request  $request
+     *  @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
+    public function get(Request $request): StreamedResponse
     {
         $headers = [
             "Content-Type" => "text/event-stream",

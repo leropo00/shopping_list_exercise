@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response as ResponseCode;
-
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Models\PurchaseItem;
 use App\Services\JsonDataService;
 
@@ -13,7 +14,12 @@ class ImportExportDataController extends Controller
 {
     public function __construct(protected JsonDataService $jsonDataService){}
 
-    public function list()
+    /**
+     * Export all of the current data in application and download them as json file.
+     *
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
+    public function list(): StreamedResponse
     {
         $jsonContent = $this->jsonDataService->getJsonData();
         return response()->stream(
@@ -28,11 +34,13 @@ class ImportExportDataController extends Controller
         );
     }
 
-	
-	/**
-     * Store a newly created resource in storage.
+    /**
+     * Import the data inside json file 
+     *      
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): Response
     {
         $request->validate([
             'file' => ['required', 'file'],

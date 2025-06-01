@@ -6,18 +6,27 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
-
 use App\Enums\PurchaseItemStatus;
 use App\Models\PurchaseItem;
 use App\Models\PurchaseListEvent;
 
 class JsonDataService
 {
+    /**
+     * Export all the shopping list records into formatted json string
+     *
+     *  @return string
+     */
     public function getJsonData(): string
     {
         return $jsonContent = PurchaseItem::all()->toJson(JSON_PRETTY_PRINT);
     }
 
+    /**
+     * Validate if data in json file
+     *
+     *  @param  array  $json
+     */
     public function checkErrorsInJsonData(array $json): void
     {
         // validation on element by element, if data is correct
@@ -53,6 +62,15 @@ class JsonDataService
         }
     }
 
+    /**
+     *  Parses the json data and based on current database state,
+     *  either updates the existing records or inserts new record.
+     *  This way no duplicated records are inserted, rules are described in readme file.
+     *  This does not remove existing records, if you would like a clear state,
+     *  you need to remove all the purchase list items before.
+     * 
+     *  @param  array  $json
+     */
     public function parseJsonData(array $json): void
     { 
         DB::transaction(function() use($json) {
@@ -88,6 +106,11 @@ class JsonDataService
 
     }
 
+    /**
+     *  Triggers an event when import is performed,
+     *  so that users application is refreshed with new data
+     *
+     */
     public function triggerEventChanged(): void
     {
         PurchaseListEvent::create([
@@ -95,7 +118,7 @@ class JsonDataService
         ]);
     }
 
-    private function createNewPurchaseItem($item): void
+    private function createNewPurchaseItem(array $item): void
     {
         $newItem = new PurchaseItem;
         $newItem->item_name = $item['item_name'];
@@ -116,7 +139,7 @@ class JsonDataService
         $newItem->save();
     }
 
-    private function updateExistingItem($result, array $item): void
+    private function updateExistingItem(PurchaseItem $result, array $item): void
     {
         $saveChanges = false;
 

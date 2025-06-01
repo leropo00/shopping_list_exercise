@@ -24,6 +24,8 @@ class PurchaseItem extends Model
 
     /**
      * Scope a query to only include items on the list.
+     * 
+     * @param  Builder   $query
      */
     public function scopeEditable(Builder $query): void
     {
@@ -32,6 +34,8 @@ class PurchaseItem extends Model
 
    /**
      * Scope a query to only include items that are currenlty in shopping.
+     * 
+     * @param  Builder   $query
      */
     public function scopeInShopping(Builder $query): void
     {
@@ -40,6 +44,8 @@ class PurchaseItem extends Model
 
    /**
      * Scope a query to only include items on the list.
+     * 
+     * @param  Builder   $query
      */
     public function scopeChecked(Builder $query): void
     {

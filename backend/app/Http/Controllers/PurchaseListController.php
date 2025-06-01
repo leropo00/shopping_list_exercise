@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response as ResponseCode;
 use App\Enums\PurchaseItemStatus;
@@ -11,12 +11,14 @@ use App\Models\PurchaseItem;
 use App\Models\PurchaseListEvent;
 
 class PurchaseListController extends Controller
-{
-    
+{    
     /**
-     * Store a newly created resource in storage.
+     * Creates a new purchase item record
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): Response
     {
         $request->validate([
             'item_name' => ['required', 'min:1', 'max:255'],
@@ -46,9 +48,13 @@ class PurchaseListController extends Controller
     }
 
     /**
-     * Update an existing resource.
+     * Update purchase item data that is editable, if item is currently in editable status.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $id
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): Response
     {
         $request->validate([
             'item_name' => ['required', 'min:1', 'max:255'],
@@ -63,14 +69,11 @@ class PurchaseListController extends Controller
         }
 
         if ($existingItem->item_name != $request->item_name && 
-             PurchaseItem::editable()
-                ->whereNot('id', $id)
-                ->where('item_name', $request->item_name)
-                ->count() > 0) {
+             PurchaseItem::editable()->whereNot('id', $id)->where('item_name', $request->item_name)->count() > 0) {
                 return response([  'message' => 'Item with the same name alredy exists',
                     'errors' => [ERROR_EXISTING_ITEM],
                 ], ResponseCode::HTTP_BAD_REQUEST );            
-            }
+        }
 
         $item = DB::transaction(function() use($request, $existingItem) {
             $userId = $request->user()->id;
@@ -84,15 +87,18 @@ class PurchaseListController extends Controller
             ]);
             return $item;
         });		
-
         return response($item, ResponseCode::HTTP_OK);
-
     }
 
+
     /**
-     * Delete an existing resource.
+     * Export all of the current data in application and download them as json file.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $recordId
+     * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, string $recordId)
+    public function destroy(Request $request, string $recordId): Response
     {
         $userId = $request->user()->id;
         DB::transaction(function() use($recordId, $userId) {
@@ -103,14 +109,16 @@ class PurchaseListController extends Controller
                 'record_id' => $recordId,
             ]);
         });
-
         return response(null, ResponseCode::HTTP_NO_CONTENT);
     }
 
     /**
-     * Clear all the items.
+     * Clear all the records of a purchase list
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
-    public function empty(Request $request)
+    public function empty(Request $request): Response
     {
         $userId = $request->user()->id;
         DB::transaction(function() use($userId) {
@@ -126,17 +134,24 @@ class PurchaseListController extends Controller
     }
     
     /**
-     * Show specific items.
+     * Remove a purchase list item
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $id
+     * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, String $id)
+    public function show(Request $request, String $id): Response
     {
         return response(PurchaseItem::where('id', $id)->get());
     }
 
     /**
-     * Get all the items.
+     * List all the purchase list items
+     *
+     * @param  \Illuminate\Http\Request  $request    
+     * @return \Illuminate\Http\Response
      */
-    public function list(Request $request)
+    public function list(Request $request): Response
     {
         return response(PurchaseItem::all());
     }
