@@ -1,10 +1,17 @@
 # Shopping List exercise
+
+## Description
+A Shopping List application, with both fronted and backend.
+Currently only a single "global" shopping list is implemented, that is common to all the registered users.
+Application has mobile responsive design, allows for data import and export either via application or command line,
+and notifies other users, when shopping list data changes, via Server sent events.
+
 ## Tech stack used
 
 Project has two directories, frontend and backend for both parts of the project.
 Fronted was done with NodeJs, Vue 3, Vite and Tailwind.
 Backend was done with Laravel 12, Php 8.2, MySql 8.
-
+Project is containerized with Docker.
 
 ## How to setup 
 Docker is needed to run the containers. Move to the root folder of project and run command:
@@ -59,8 +66,7 @@ exit
 
 You can now access the frontend at url
 http://localhost:3000/
-Frontend runs in developer mode, in case reviewers need debugging,
-with Vue developer tools.
+Frontend runs in developer mode with Vue developer tools.
 
 ## How to run tests 
 
@@ -150,7 +156,14 @@ So for example unchecked items will not have checked quantity set, even if value
 
 
 
-## Possible user experience improvements
+## Possible improvements to application
+
+### Multiple shopping List
+Currently for simplicity only one global shopping list is implemented.
+Separate shopping list should be implemented, user should have the access 
+only to certain list and option to create a new shopping list, where 
+he could invite other users.
+
 
 ### Improvements when list of data grows larger
 Currently all data is listed with an infinite table, this approach is not scalable when data will grow much larger. Pagination should be used, and only reading data with needed status.
@@ -179,3 +192,18 @@ Only the very basic email/password authentication is implemented for demonstrati
 Many other features should be added like password reset, email confirmation and authentication via Gmail account by integrating Google Sign in. Password fields could have the display password option. There is currently no option to save user preferences, currently this would make sense for the interface language.
 
 
+## Possible technical improvements
+
+### Single docker database container
+
+Currenlty there are 2 docker containers in application, one is used for application tests.
+A single database container could be used, with different databases, one for Application
+and one for testing.
+
+
+### Reduce the number of reads in fronted, when SSE events are received from backend
+
+In many cases, when receiving a SSE event from backend, it is not necessary,
+to reload the whole data, only to update the changes. Currenlty this is implemented,
+only for delete events, but could be expanded to other events,
+with the exception of import event.
