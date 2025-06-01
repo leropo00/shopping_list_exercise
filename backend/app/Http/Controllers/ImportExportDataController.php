@@ -11,12 +11,7 @@ use App\Services\JsonDataService;
 
 class ImportExportDataController extends Controller
 {
-    protected $jsonDataService;
-
-    public function __construct(JsonDataService $jsonDataService)
-    {
-        $this->jsonDataService = $jsonDataService;
-    }
+    public function __construct(protected JsonDataService $jsonDataService){}
 
     public function list()
     {

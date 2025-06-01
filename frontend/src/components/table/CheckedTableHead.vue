@@ -13,41 +13,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import usePurchaseListStore from '@/store/purchaseList'
-import axiosClient from '@/axios.js'
-import { URL_CREATE_PURCHASE_ITEM, HTTP_CODE_CREATED } from '@/constants.js'
-import { useNotification } from "@kyvg/vue3-notification";
-import { formatErrorResponse } from '@/helpers.js'
 import {useI18n} from 'vue-i18n' 
 const {t} = useI18n();
-const { notify }  = useNotification()
-
-const listStore = usePurchaseListStore()
-
-const itemInsertedData = ref({
-  item_name: '',
-  quantity: 1,
-})
-
-function addItem() {
-  axiosClient
-    .post(URL_CREATE_PURCHASE_ITEM, itemInsertedData.value)
-    .then(async (response) => {
-      if (response.status === HTTP_CODE_CREATED) {
-        itemInsertedData.value.item_name = ''
-        itemInsertedData.value.quantity = 1
-        await listStore.fetchList()
-      }
-    })
-    .catch((error) => {
-      notify({
-        title: t("errors.title"),
-        text: t(formatErrorResponse(error)),
-        type: 'error',
-      });
-    })
-}
 </script>
 
 <style scoped></style>
